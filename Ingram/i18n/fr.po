@@ -1,0 +1,705 @@
+# -*- coding: utf-8 -*-
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* BHC_Ingram
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.2\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-09-06 07:52+0000\n"
+"PO-Revision-Date: 2011-09-06 07:52+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: BHC_Ingram
+#: help:ingram_config,supplier_id:0
+msgid "Supplier of this product"
+msgstr "Fournisseur de ce produit"
+
+#. module: BHC_Ingram
+#: model:ir.module.module,description:BHC_Ingram.module_meta_information
+msgid "\n"
+"    This module provides an XML integration between OpenERP and Ingram Micro Servers. \n"
+"    It allows to maintain the Ingram product catalog and price list up to date automatically. \n"
+"    It also provides a real-time integration for quotation, sales, purchases and deliveries. \n"
+"    Actions in OpenERP generate requests toward Ingram to get informations, or to place an order directly, \n"
+"    without using any external tool or website. \n"
+"    "
+msgstr "\n"
+"    Ce modulet fournit une integration XML entre OpenERP et les serveurs Ingram Micro. \n"
+"    Il vous permet de maintenir automatiquement � jour  les produits et les listes de prix du catalogue Ingram. \n"
+"    Il vous offre �galement une int�gration en temps r�el pour vos devis, ventes, achat et d�livery. \n"
+"    Les actions r�alis�es dans OpenERP g�n�re automatiquement des requetes vers Ingram pour recevoir les informations ou pour directement passer une commande sans utiliser aucun outil ou site web externe. \n"
+"    "
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Profil"
+msgstr "Profil"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Configuration Information"
+msgstr "Information de Configuration"
+
+#. module: BHC_Ingram
+#: field:ingram_config,supplier_id:0
+msgid "Supplier"
+msgstr "Fournisseur"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Make Invoices"
+msgstr "Generer les factures"
+
+#. module: BHC_Ingram
+#: sql_constraint:purchase.order:0
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "La reference de la commande doit etre unique !"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:159
+#, python-format
+msgid "Already send order"
+msgstr "Commande déjà envoyée"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:833
+#, python-format
+msgid "No Customer Defined !"
+msgstr "Aucun client défini"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:170
+#, python-format
+msgid "Transactions are currently unavailable "
+msgstr "Transactions momentanément indisponible "
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:764
+#, python-format
+msgid "Stock Information !"
+msgstr "Stock Information !"
+
+#. module: BHC_Ingram
+#: field:ingram_config,chemin:0
+msgid "Path"
+msgstr "Chemin"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:136
+#, python-format
+msgid "Purchase order '%s' is confirmed."
+msgstr "Commande d achat '%s' confirmée."
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "UoM"
+msgstr "UdM"
+
+#. module: BHC_Ingram
+#: help:ingram_config,location_id:0
+msgid " Location of new product"
+msgstr "Stock pour les nouveaux produits"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+#: view:stock.picking:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Taxes"
+msgstr "Taxes"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_purchase_order
+msgid "Purchase Order"
+msgstr "Bon de commande"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Delete Data"
+msgstr "Suppression des donnees"
+
+#. module: BHC_Ingram
+#: help:sale.order.line,stockingr:0
+msgid "Legend of the function price and avalability\n"
+"Blue = stock decreases\n"
+"Red = price of the supplier increases\n"
+"Green =prix of the supplier decreases"
+msgstr "Legende de la fonction \"Verification prix/stock\"\n"
+"Bleu = stock diminue\n"
+"Rouge = prix du fournisseur augmente\n"
+"Vert =prix du fournisseur diminue"
+
+#. module: BHC_Ingram
+#: field:ingram_config,supplier_taxes_id:0
+msgid "Supplier Taxes"
+msgstr "Taxes d'achat"
+
+#. module: BHC_Ingram
+#: field:ingram_config,xml_active:0
+msgid "XMl Request"
+msgstr "Requete XML"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:867
+#, python-format
+msgid "Packing Information !"
+msgstr "Packing Information !"
+
+#. module: BHC_Ingram
+#: help:ingram_config,xml_passwd:0
+msgid "Password for Xml Request"
+msgstr "Mot de passe pour les requetes XML"
+
+#. module: BHC_Ingram
+#: field:product.product,vpn:0
+msgid "VPN"
+msgstr "VPN"
+
+#. module: BHC_Ingram
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "Erreur ! Vous ne pouvez pas creer de categorie recursive."
+
+#. module: BHC_Ingram
+#: field:ingram_config,xml_address:0
+msgid "Server Xml address"
+msgstr "Adresse du server XML"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Extra Info"
+msgstr "Info supplémentaires"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:201
+#: code:addons/BHC_Ingram/ingram.py:606
+#: code:addons/BHC_Ingram/ingram.py:615
+#, python-format
+msgid "Warning!"
+msgstr "Attention!"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_sale_order
+msgid "Sales Order"
+msgstr "Commande de ventes"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Order Line"
+msgstr "Ligne de commande"
+
+#. module: BHC_Ingram
+#: field:sale.order.line,verif:0
+msgid "Check"
+msgstr "Vérification"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de bon de commandes"
+
+#. module: BHC_Ingram
+#: field:product.template,ingram:0
+msgid "Ingram Product"
+msgstr "Produit Ingram"
+
+#. module: BHC_Ingram
+#: field:ingram_config,server_address:0
+msgid "Server address"
+msgstr "Addresse du serveur"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Access configuration to the server Xml"
+msgstr "Configuration du server XML"
+
+#. module: BHC_Ingram
+#: field:ingram_config,location_id:0
+msgid "Location"
+msgstr "Stock"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_stock_picking
+msgid "Picking List"
+msgstr "Liste de prelevement"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Access configuration to the server"
+msgstr "Configuration de l'accès au serveur"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Are you sure?"
+msgstr "Etes-vous sur?"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Invoice Lines"
+msgstr "Lignes de facture"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Price Availabilty"
+msgstr "Verification prix/stock"
+
+#. module: BHC_Ingram
+#: field:history.command,date:0
+#: help:history.command,date:0
+msgid "Expected Date"
+msgstr "Date prévue"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_product_category
+msgid "Product Category"
+msgstr "Categorie de produits"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:132
+#, python-format
+msgid "Error !"
+msgstr "Erreur !"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Sales Order Lines"
+msgstr "Lignes de ventes"
+
+#. module: BHC_Ingram
+#: model:ir.ui.menu,name:BHC_Ingram.menu_product_Ingram_config
+msgid "Product Ingram Config."
+msgstr "Config. Produit Ingram"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:132
+#, python-format
+msgid "You can not confirm purchase order without Purchase Order Lines."
+msgstr "Vous ne pouvez pas confirmer une commande d'achat sans lignes"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+#: model:ir.actions.act_window,name:BHC_Ingram.action_ingram_form_config_bhc
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: BHC_Ingram
+#: view:stock.picking:0
+msgid "Status"
+msgstr "Statut"
+
+#. module: BHC_Ingram
+#: field:ingram_config,id_synchro:0
+msgid "Cronjob"
+msgstr "Cronjob"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:615
+#, python-format
+msgid "Incomming isn't link to a order"
+msgstr "Réception non liée a une commande"
+
+#. module: BHC_Ingram
+#: help:ingram_config,categorie_id:0
+msgid "Select category for the current product"
+msgstr "Sélectionnez une catégorie pour le produit"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_procurement_order
+msgid "Procurement"
+msgstr "Approvisionnement"
+
+#. module: BHC_Ingram
+#: field:stock.picking,date_ingr:0
+#: help:stock.picking,date_ingr:0
+msgid "Delivry date"
+msgstr "Date de livraison"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Clean Data"
+msgstr "Nettoyage des Donnees"
+
+#. module: BHC_Ingram
+#: field:ingram_config,taxes_iden:0
+msgid "taxe id"
+msgstr "taxe id"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_ingram_config
+msgid "Configuration Management Produces Ingram"
+msgstr "Configuration Gestion des produits Ingram"
+
+#. module: BHC_Ingram
+#: field:purchase.order,ingramsalesorderdate:0
+msgid "Date the order"
+msgstr "Date the order"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:833
+#, python-format
+msgid "You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
+msgstr "You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
+
+#. module: BHC_Ingram
+#: field:ingram_config,date_synchro:0
+msgid "Date of last synchronization"
+msgstr "Date de la derniere synchronisation"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:865
+#, python-format
+msgid " Quantity: "
+msgstr " Quantité: "
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Download"
+msgstr "Téléchargement"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Stock Moves"
+msgstr "Mouvements de stock"
+
+#. module: BHC_Ingram
+#: field:ingram_config,categorie_id:0
+#: field:ingram_config,categorie_name:0
+msgid "Category"
+msgstr "Catégorie"
+
+#. module: BHC_Ingram
+#: help:ingram_config,categorie_name:0
+msgid "Name of the product categorie"
+msgstr "Nom de la catégorie des produits"
+
+#. module: BHC_Ingram
+#: help:ingram_config,id_synchro:0
+msgid "Cronjob in OpenERP for automatic synchronization. To bind the Cronjob with the configuration, click the button"
+msgstr "Action planifiée dans OpenERP pour la synchronisation automatique."
+
+#. module: BHC_Ingram
+#: help:purchase.order,ingramsalesorderdate:0
+msgid "Date the order at Ingram"
+msgstr "Date de la commande chez Ingram"
+
+#. module: BHC_Ingram
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Erreur : l'unite de mesure par defaut et l'unite de mesure d'achat doivent appartenir a la meme categorie."
+
+#. module: BHC_Ingram
+#: model:ir.module.module,description:BHC_Ingram.module_meta_information
+msgid "\n"
+"    This module provides an XML integration between OpenERP and Ingram Micro Servers. \n"
+"    It allows to maintain the Ingram product catalog and price list up to date automatically. \n"
+"    It also provides a real-time integration for quotation, sales, purchases and deliveries. \n"
+"    Actions in OpenERP generates requests toward Ingram to get informations, or to place an order directly, \n"
+"    without using any external tool or website.\" \n"
+"    "
+msgstr "\n"
+"    Ce module fournit une integration XML entre des Serveurs d'Ingram Micro Et OpenERP. \n"
+"    Il permet de maintenir le catalogue des produits Ingram et le tarif à jour automatiquement. \n"
+"    Il fournit aussi une integration en temps reel pour les devis, les ventes, les achats et les livraisons. \n"
+"    Les actions dans OpenERP generent des requetes vers Ingram pour obtenir des informations, \n"
+"    ou l'envoie d' une commande directement, sans utiliser n'importe quel outil externe ou site Web.\" \n"
+"    "
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:865
+#, python-format
+msgid " Type of ul: "
+msgstr " Type of ul: "
+
+#. module: BHC_Ingram
+#: help:product.product,vpn:0
+msgid "VPN code"
+msgstr "Code VPN"
+
+#. module: BHC_Ingram
+#: help:ingram_config,server_login:0
+msgid "Login database"
+msgstr "Login pour la conexion au serveur"
+
+#. module: BHC_Ingram
+#: field:purchase.order,ingramsalesordernumber:0
+msgid "Numero of order"
+msgstr "Numéro de commande"
+
+#. module: BHC_Ingram
+#: help:ingram_config,xml_login:0
+msgid "Login for Xml request "
+msgstr "Login pour les requetes Xml "
+
+#. module: BHC_Ingram
+#: field:purchase.order,sendorder:0
+msgid "Commande envoyee"
+msgstr "Commande envoyée"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:865
+#, python-format
+msgid "EAN: "
+msgstr "EAN: "
+
+#. module: BHC_Ingram
+#: field:ingram_config,taxes_id:0
+msgid "Customer Taxes"
+msgstr "Taxes de ventes"
+
+#. module: BHC_Ingram
+#: field:ingram_config,date_import:0
+msgid "Date of last importation"
+msgstr "Date de la dernière importation"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Ajout des categorie Ingram"
+msgstr "Ajout des catégories Ingram"
+
+#. module: BHC_Ingram
+#: help:ingram_config,server_passwd:0
+msgid "Password database"
+msgstr "Mot de passe pour la conexion au serveur FTP"
+
+#. module: BHC_Ingram
+#: field:product.product,manufacturer:0
+#: help:product.product,manufacturer:0
+msgid "Manufacturer"
+msgstr "Fabricant"
+
+#. module: BHC_Ingram
+#: view:purchase.order:0
+#: view:sale.order:0
+msgid "Compute"
+msgstr "Calculer"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:159
+#: code:addons/BHC_Ingram/ingram.py:170
+#: code:addons/BHC_Ingram/ingram.py:214
+#, python-format
+msgid "Information!"
+msgstr "Information!"
+
+#. module: BHC_Ingram
+#: help:ingram_config,xml_address:0
+msgid "server Xml address"
+msgstr "Adresse du serveur XML"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Synchronize"
+msgstr "Synchronisation"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "History"
+msgstr "Historique"
+
+#. module: BHC_Ingram
+#: help:ingram_config,chemin:0
+msgid "Path where the files is stored"
+msgstr "Chemin où les fichiers doivent etre stockés"
+
+#. module: BHC_Ingram
+#: field:history.command,datemaj:0
+#: help:history.command,datemaj:0
+msgid "Updated date"
+msgstr "Date de mise à jour"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "Qty"
+msgstr "Qte"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Automatic synchronization of data"
+msgstr "Synchronisation automatique des données"
+
+#. module: BHC_Ingram
+#: help:ingram_config,xml_active:0
+msgid "Active the Xml Request"
+msgstr "Active les requêtes XML"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:864
+#, python-format
+msgid "You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging: "
+msgstr "You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging: "
+
+#. module: BHC_Ingram
+#: field:procurement.order,sendorder:0
+msgid "Sendorder"
+msgstr "Envoie de commande"
+
+#. module: BHC_Ingram
+#: field:product.category,code_categ_ingram:0
+msgid "Ingram code category"
+msgstr "Code de la catégorie Ingram"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_history_command
+msgid "History of the status of the commands"
+msgstr "Historique des statuts des commandes"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:762
+#, python-format
+msgid "warning"
+msgstr "attention"
+
+#. module: BHC_Ingram
+#: view:stock.picking:0
+msgid "Process Later"
+msgstr "Traiter plus tard"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Actions"
+msgstr "Actions"
+
+#. module: BHC_Ingram
+#: view:stock.picking:0
+msgid "History command"
+msgstr "Historique des commandes"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_product_product
+msgid "Product"
+msgstr "Produit"
+
+#. module: BHC_Ingram
+#: field:history.command,description:0
+msgid "Description"
+msgstr "Description"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Profils"
+msgstr "Profils"
+
+#. module: BHC_Ingram
+#: field:ingram_config,server_passwd:0
+#: field:ingram_config,xml_passwd:0
+msgid "Password"
+msgstr "Mot de passe"
+
+#. module: BHC_Ingram
+#: model:ir.module.module,shortdesc:BHC_Ingram.module_meta_information
+msgid "Ingram XML integration"
+msgstr "Intégration XML d'Ingram Micro"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Sale Taxes"
+msgstr "Taxes de ventes"
+
+#. module: BHC_Ingram
+#: field:history.command,idmani:0
+#: field:stock.picking,history_lineb:0
+msgid "idLabel"
+msgstr "idLabel"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Purchase Taxes"
+msgstr "Taxes d'achats"
+
+#. module: BHC_Ingram
+#: field:history.command,name:0
+#: field:ingram_config,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Cronjob for automatic synchronization"
+msgstr "Cronjob pour une synchronisation automatique"
+
+#. module: BHC_Ingram
+#: model:ir.model,name:BHC_Ingram.model_product_template
+msgid "Product Template"
+msgstr "Modèle de produit"
+
+#. module: BHC_Ingram
+#: help:ingram_config,server_address:0
+msgid "server ip address"
+msgstr "Adresse IP du serveur"
+
+#. module: BHC_Ingram
+#: field:ingram_config,server_login:0
+#: field:ingram_config,xml_login:0
+msgid "Login"
+msgstr "Login"
+
+#. module: BHC_Ingram
+#: view:purchase.order:0
+msgid "send order"
+msgstr "Envoie commande"
+
+#. module: BHC_Ingram
+#: help:purchase.order,ingramsalesordernumber:0
+msgid "Numero of order at Ingram"
+msgstr "Numéro de commande chez Ingram"
+
+#. module: BHC_Ingram
+#: code:addons/BHC_Ingram/ingram.py:201
+#: code:addons/BHC_Ingram/ingram.py:214
+#: code:addons/BHC_Ingram/ingram.py:606
+#, python-format
+msgid "Connexion failed"
+msgstr "Connexion échouée"
+
+#. module: BHC_Ingram
+#: field:sale.order.line,stockingr:0
+msgid "Stock Ingram"
+msgstr "Stock Ingram"
+
+#. module: BHC_Ingram
+#: field:product.category,categ_ingram:0
+msgid "Ingram category"
+msgstr "Ingram catégorie"
+
+#. module: BHC_Ingram
+#: help:ingram_config,name:0
+msgid "Name associated with the configuration"
+msgstr "Nom associé à la configuration"
+
+#. module: BHC_Ingram
+#: view:sale.order:0
+msgid "States"
+msgstr "Etats"
+
+#. module: BHC_Ingram
+#: field:ingram_config,taxes_achats:0
+#: field:ingram_config,taxes_ventes:0
+msgid "ingram_config"
+msgstr "ingram_config"
+
+#. module: BHC_Ingram
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erreur : Code EAN invalide"
+
+#. module: BHC_Ingram
+#: view:ingram_config:0
+msgid "Accounting"
+msgstr "Comptabilité"

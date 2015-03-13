@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>        
+        <record id="purchase_order_form_in" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="generate_po" colspan="4"/>
+                </field>
+                <field colspan="4" name="order_line" nolabel="1" mode="tree,form" position="replace">
+                    <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
+                        <tree string="Purchase Order Lines">
+                            <field name="date_planned"/>
+                            <field name="name"/>
+                            <field name="product_qty"/>
+                            <field name="product_uom"/>
+                            <field name="stockingr"/>
+                            <field name="price_unit"/>
+                            <field name="price_subtotal"/>
+                        </tree>
+                    </field>
+                </field>               
+            </field>
+        </record>
+        <record id="purchase_order_line_form_in" model="ir.ui.view">
+            <field name="name">purchase.order.line.form</field>
+            <field name="model">purchase.order.line</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="after">
+                    <field name="stockingr"/>
+                </field>    
+            </field>
+        </record>
+    </data>
+</openerp>

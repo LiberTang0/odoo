@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record model="ir.ui.view" id="view_picking_form_ingram">
+            <field name="name">stock.picking.in.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_in_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<page string="Notes" position="after">
+                    <page string="History command">
+                        <field colspan="3" name="history_lineb" nolabel="1" widget="one2many_list">
+                            <tree string="History command">
+	                            <field name="date" />
+		                        <field name="datemaj" />
+		                        <field name="description" />
+		                   </tree>
+		               </field>
+		               <newline/>
+		               <button name="button_status" string="Status" type="object" icon="gtk-execute"/>
+	         		</page>
+                </page>
+			</field>
+        </record>
+
+    </data>
+</openerp>

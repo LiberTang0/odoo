@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+   <data>
+   		<record model="ir.ui.view" id="ingram_tree_view_config">
+			<field name="name">ingram.tree.config</field>
+			<field name="model">ingram_config</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Profils">
+					<field name="name" />
+					<field name="server_address"/>
+					<field name="id_synchro" string="Cronjob for automatic synchronization"/>
+					<field name="date_synchro" />
+				</tree>
+			</field>
+		 </record>
+
+   		 <record model="ir.ui.view" id="ingram_form_view_config">
+		 	<field name="name">ingram.form.config</field>
+			<field name="model">ingram_config</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+			<form string="Profil" >	
+				<notebook position="inside">
+					<page string="Configuration">
+					<separator string="Configuration Information"/><newline/>
+					<group colspan="2" col="2">
+						<field name="name" />
+						<field name="location_id" />
+						<field name="categorie_id" />
+						<field name="supplier_id" />
+						<field name="chemin" />
+						<field name="mailto" /><newline/>
+					</group><newline/>
+					<separator string="Access configuration to the server"/><newline/>
+					<group colspan="2" col="2">
+						<field name="server_address"/><newline/>
+						<field name="server_login"/><newline/>
+						<field name="server_passwd" password="True"/>
+					</group><newline/>
+					<separator string="Actions"/><newline/>
+					<group colspan="2" col="3">
+						<button name="button_import_data"  type="object" string="Download" /><field name="date_import"/><newline/>
+						<button name="synchro_data"  type="object" string="Synchronize" /><field name="date_synchro"/><newline/>
+						<button name="clean_data" type="object" string="Clean Data" help="Set to inactive the product where the last synchro date from more than a week"/><newline/>
+						<button name="delete_data" type="object" string="Delete Data" confirm="Are you sure?" help="Set to inactive all the Ingram product"/><newline/>
+					</group><newline/>
+					<separator string="Access configuration to the server Xml"/><newline/>
+					<group colspan="2" col="2">
+						<field name="xml_address"/><field name="xml_active"/><newline/>
+						<field name="xml_login"/><newline/>
+						<field name="xml_passwd" password="True"/>
+					</group><newline/>
+					<separator string="Automatic synchronization of data"/><newline/>
+					<group colspan="2" col="2">
+					<field name="id_synchro" /><newline/>
+					</group><newline/>
+					</page>
+                    <page string="Accounting">
+					<newline/>
+					<group colspan="2">
+                        <separator string="Sale Taxes" colspan="2"/>
+                        <separator string="Purchase Taxes" colspan="2"/>
+                        <field name="taxes_ventes" nolabel="1" colspan="2"  attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                        <field name="taxes_achats" nolabel="1" colspan="2"  attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                    </group>
+                    </page>
+                </notebook>
+                </form>
+			</field>
+		</record>
+		
+		 <!-- Action sur le menu de configuration-->
+		<record model="ir.actions.act_window" id="action_ingram_form_config_bhc">
+			<field name="name">Configuration</field>
+			<field name="res_model">ingram_config</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="ingram_tree_view_config"/>
+		</record>
+		
+   		 <menuitem name="Product Ingram Config." id="menu_product_Ingram_config" 
+   		 action="action_ingram_form_config_bhc"  parent="stock.menu_stock_configuration" sequence="0"/>
+   </data>
+</openerp>
