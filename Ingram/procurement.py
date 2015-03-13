@@ -55,19 +55,14 @@ class procurement_order(osv.osv):
             partner_id = partner.id
             address_id = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
-
             uom_id = procurement.product_id.uom_po_id.id
-
             qty = self.pool.get('product.uom')._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if procurement.product_id.seller_ids[0].qty:
                 qty=max(qty,procurement.product_id.seller_ids[0].qty)
-
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
-
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
             newdate = newdate - procurement.product_id.seller_ids[0].delay
-
             product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
             line = {
                 'name': procurement.description,

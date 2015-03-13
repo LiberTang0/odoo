@@ -50,6 +50,7 @@ class product_product(osv.osv):
     _columns = {
                 'vpn': fields.char("VPN",255,help="VPN code"),
                 'manufacturer' : fields.char("Manufacturer",255,help="Manufacturer"),
+                
     }
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):

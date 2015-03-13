@@ -26,7 +26,6 @@ from xml.dom.minidom import parse, parseString
 import xml.dom.minidom
 import socket
 import httplib
-
 import time
 import netsvc
 from osv import fields, osv
@@ -330,7 +329,7 @@ class purchase_order(osv.osv):
                return self.handleSlideshowItemDetails(cr,uid,ids,ResponsePreamble.getElementsByTagName("OrderCreateResponse")[0])
            else: 
                return False
-           
+
     def getText(self,nodelist):
             rc = []
             for node in nodelist:
@@ -408,6 +407,60 @@ class purchase_order(osv.osv):
             self.pool.get('purchase.order').write(cr,uid,ids,{'ingramsalesorderdate':dateCom})
             return (id_create)   
     
+    def button_check_AV(self,cr,uid,ids,context=None):
+        boolprice=False
+        boolquant=False
+        txt="" 
+        ordreid=self.pool.get('purchase.order.line').search(cr,uid,[('order_id','=',ids[0]),])
+        for i in ordreid:
+            donne=self.pool.get('purchase.order.line').browse(cr,uid,i)
+            idprod = donne.product_id
+            if idprod:
+                donnee=self.pool.get('product.template').browse(cr,uid,idprod.id)
+                idsearch=self.pool.get('ingram_config').search(cr,uid,[('xml_active','=','True'),])
+                config=self.pool.get('ingram_config').read(cr,uid,idsearch,['categorie_id'])
+                prod_tmpl_id=self.pool.get('product.product').browse(cr,uid,idprod.id).product_tmpl_id.id
+                valeur2=self.pool.get('product.template').browse(cr,uid,prod_tmpl_id)
+                if valeur2.ingram:
+                    donnee=self.pool.get('product.product').browse(cr,uid,idprod.id)
+                    if donnee.default_code:
+                        prix,quantite,bool=self.pool.get('sale.order.line').actualisationPrix(cr,uid,ids,donnee.default_code,idprod.id)
+                        prodtemp=self.pool.get('product.template').browse(cr,uid,prod_tmpl_id)
+                        if (prodtemp.standard_price!=float(prix))|(donne.stockingr != quantite):             
+                            if (prodtemp.standard_price!=float(prix)):
+                                boolprice=True
+                                if (donne.stockingr > quantite):
+                                    boolquant=True
+                                    self.pool.get('purchase.order.line').write(cr,uid,[i],{'stockingr':quantite,'verif':'1'})
+                                else:
+                                    self.pool.get('purchase.order.line').write(cr,uid,[i],{'stockingr':quantite})
+                                if  (prodtemp.standard_price>float(prix)):
+                                    self.pool.get('purchase.order.line').write(cr,uid,[i],{'verif':'2'})
+                                    self.pool.get('product.template').write(cr,uid,prod_tmpl_id,{'standard_price':prix})
+                                else:
+                                    self.pool.get('purchase.order.line').write(cr,uid,[i],{'verif':'3'})
+                                    self.pool.get('product.template').write(cr,uid,prod_tmpl_id,{'standard_price':prix})
+                            else:
+                                if (donne.stockingr > quantite):
+                                    boolquant=True
+                                    self.pool.get('purchase.order.line').write(cr,uid,[i],{'stockingr':quantite,'verif':'1'})
+                                else:
+                                    self.pool.get('purchase.order.line').write(cr,uid,[i],{'stockingr':quantite,'verif':'0'})
+                        else:
+                            self.pool.get('purchase.order.line').write(cr,uid,[i],{'verif':'0'})
+                    
+        if boolprice :
+            txt= "Prix différents" + str("\n")
+        if boolquant :
+            txt+="Stock différents "+str("\n")
+        if boolprice | boolquant:
+            warn_msg = _("warning") 
+            warning = {
+                    'title': _('Stock and price information !'),
+                    'message': txt,
+                    }
+        return True
+    
     def verifConexion(self,cr,uid,ids,noeud):
         returncode=self.getText((noeud.getElementsByTagName("ReturnCode")[0]).childNodes)
         returnMessage=self.getText((noeud.getElementsByTagName("ReturnMessage")[0]).childNodes)
@@ -428,9 +481,10 @@ purchase_order()
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     _columns = {
-        'stockingr': fields.char('Stock Ingram', size=256,),    
+        'stockingr': fields.char('Stock Ingram', size=256, select=True,help="Legend of the function price and avalability\nBlue = stock decreases\nRed = price of the supplier increases\nGreen =prix of the supplier decreases" ),
+        'verif': fields.char('Check',size=25),    
     }
-   
+    
     def actualisationPrix(self,cr,uid,ids,id_prod,product):     
         return self.checkPrice(cr,uid,ids,id_prod,product)
     

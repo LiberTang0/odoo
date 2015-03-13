@@ -23,46 +23,55 @@
 			<form string="Profil" >	
 				<notebook position="inside">
 					<page string="Configuration">
+					
 					<separator string="Configuration Information"/><newline/>
-					<group colspan="2" col="2">
-						<field name="name" />
-						<field name="location_id" />
-						<field name="categorie_id" />
-						<field name="supplier_id" />
-						<field name="chemin" />
-						<field name="mailto" /><newline/>
+					<group colspan="4" >
+						<field name="name" colspan="4"/>
+						<field name="location_id" colspan="4"/>
+						<field name="categorie_id" colspan="4"/>
+						<field name="supplier_id" colspan="4"/>
+						<field name="chemin" colspan="4"/>
+						<field name="mailto" colspan="4"/><newline/>
 					</group><newline/>
-					<separator string="Access configuration to the server"/><newline/>
-					<group colspan="2" col="2">
-						<field name="server_address"/><newline/>
-						<field name="server_login"/><newline/>
-						<field name="server_passwd" password="True"/>
+					
+					<separator string="Access configuration to the server" colspan="4"/><newline/>
+					<group colspan="4" >
+						<field name="server_address" colspan="4"/><newline/>
+						<field name="server_login" colspan="4"/><newline/>
+						<field name="server_passwd"  colspan="4" password="True"/>
+						<button name="check_ftp" string="Check connexion" colspan="2" type="object"/><label string="" colspan="2"/>
 					</group><newline/>
+						
 					<separator string="Actions"/><newline/>
-					<group colspan="2" col="3">
+					<group colspan="2" >
+						
 						<button name="button_import_data"  type="object" string="Download" /><field name="date_import"/><newline/>
 						<button name="synchro_data"  type="object" string="Synchronize" /><field name="date_synchro"/><newline/>
 						<button name="clean_data" type="object" string="Clean Data" help="Set to inactive the product where the last synchro date from more than a week"/><newline/>
 						<button name="delete_data" type="object" string="Delete Data" confirm="Are you sure?" help="Set to inactive all the Ingram product"/><newline/>
+
 					</group><newline/>
+					
 					<separator string="Access configuration to the server Xml"/><newline/>
-					<group colspan="2" col="2">
-						<field name="xml_address"/><field name="xml_active"/><newline/>
-						<field name="xml_login"/><newline/>
-						<field name="xml_passwd" password="True"/>
+					<group colspan="4" >
+						<field name="xml_address" colspan="4"/><field name="xml_active" colspan="4"/><newline/>
+						<field name="xml_login" colspan="4"/><newline/>
+						<field name="xml_passwd" password="True" colspan="4"/>
 					</group><newline/>
+					
 					<separator string="Automatic synchronization of data"/><newline/>
-					<group colspan="2" col="2">
+					<group colspan="4" >
 					<field name="id_synchro" /><newline/>
 					</group><newline/>
+					
 					</page>
                     <page string="Accounting">
 					<newline/>
-					<group colspan="2">
+					<group colspan="4">
                         <separator string="Sale Taxes" colspan="2"/>
                         <separator string="Purchase Taxes" colspan="2"/>
-                        <field name="taxes_ventes" nolabel="1" colspan="2"  attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                        <field name="taxes_achats" nolabel="1" colspan="2"  attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                        <field name="taxes_ventes" nolabel="1" colspan="2"  /><!--attrs="{'readonly':[('sale_ok','=',0)]}"/>-->
+                        <field name="taxes_achats" nolabel="1" colspan="2"  /><!--attrs="{'readonly':[('purchase_ok','=',0)]}"/>-->
                     </group>
                     </page>
                 </notebook>

@@ -39,3 +39,4 @@
 	'installable': True,
 	'active': False,
 }
+

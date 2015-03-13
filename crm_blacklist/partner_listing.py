@@ -15,10 +15,10 @@ class res_partner(osv.osv):
         res={}
         for i in ids:
             compte_pool=pooler.get_pool(cr.dbname).get('res.partner.category')
-            id_recup=compte_pool.search(cr,uid,[('name','=', _('Liste noire')),])
+            id_recup=compte_pool.search(cr,uid,[('name','=', 'Liste noire'),])
             if not id_recup:
-                compte_pool.create(cr,uid,{'create_uid':uid,'name':_('Liste noire'),'active':True})
-                id_recup=compte_pool.search(cr,uid,[('name','=', _('Liste noire')),])
+                compte_pool.create(cr,uid,{'create_uid':uid,'name':'Liste noire','active':True})
+                id_recup=compte_pool.search(cr,uid,[('name','=', 'Liste noire'),])
             partner_id=self.pool.get('res.partner').browse(cr,uid,i).id    
             id_categ=self.pool.get('res.partner').browse(cr,uid,partner_id).category_id
             for j in id_categ:

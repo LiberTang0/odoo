@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0"> 
+    
+        <!-- 
+        Capacity planning
+		-->
+		<record forcecreate="True" id="ir_cron_update_capacity_planning"  model="ir.cron">
+            <field name="name">Automatic updates of capacity planning</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field eval="'check_cron'" name="function" />                                                             
+            <field eval="" name="args" />
+            <field name="model">capacity.planning</field> 
+        </record>
+		
+		<record model="ir.ui.view" id="capacity_planning_tree_view">
+            <field name="name">capacity.planning.tree</field>
+            <field name="model">capacity.planning</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Capacity planning">
+                    <field name="name"/>
+                    <separator orientation="vertical"/>
+                    <field name="startdate"/>
+                    <field name="enddate"/>
+                    <separator orientation="vertical"/>
+                    <field name="tpstotal" sum="Tpstotal"/>
+                    <field name="tpsoccup" sum="Tpsoccup"/>
+                    <field name="tpsdispo" sum="Tpsdispo"/>
+                    <separator orientation="vertical"/>
+                    <field name="busy" widget="progressbar" avg="Avg. of Availability"/>
+                </tree>    
+            </field>
+        </record>
+           
+        <record id="view_task_tree2_capacity" model="ir.ui.view">
+            <field name="name">project.task.tree.inherit1</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='date_start']" position="replace">
+                    <field name="date_start" invisible="0"/>
+                </xpath>
+                <xpath expr="/tree/field[@name='date_deadline']" position="replace">
+                    <field name="date_deadline" invisible="0"/>
+                </xpath>
+            </field>
+        </record>     
+
+        <record model="ir.ui.view" id="capacity_planning_form_view">
+            <field name="name">capacity.planning.form</field>
+            <field name="model">capacity.planning</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Capacity planning">
+                    <group colspan="6" col="4">
+                    	<group colspan="4" col="4">
+                        <separator string="Information" colspan="4" orientation="horizontal"/>
+                        </group>
+                        <field name="name"/>
+                        <field name="sel_department"/>
+                        <newline/>
+                        <field name="startdate" attrs="{'readonly':[('id','!=','')]}"/>
+                        <field name="enddate" attrs="{'readonly':[('id','!=','')]}"/>
+                        <newline/>
+                        <field name="tpstotal" readonly="1"/>
+                    	<field name="tpsoccup" readonly="1"/>
+                    	<field name="tpsdispo" readonly="1"/>
+                    	<field name="id" invisible="1"/>
+                    	<button name="check_update_capacity" colspan="2" string="Update" type="object" groups="base.group_planning_management_manager,base.group_planning_management_admin"/>
+                    	<group colspan="4" col="4">
+                            <label string="Do not forget to update!!!"/>
+                        </group>
+                    	<group colspan="4" col="4">
+                            <separator string="Planning..." colspan="4" orientation="horizontal"/>
+                        </group>
+                    </group> 
+                    <group colspan="4" groups="base.group_planning_management_manager,base.group_planning_management_admin,base.group_planning_management_user">
+                    <notebook colspan="4">
+                        <page string="...by Employee">
+                        <field colspan="4" name="planning_user" nolabel="1" widget="one2many_list" readonly="0">
+                            <tree string="If the line is red, check the contract and the employee's working hours." colors="red:idhourofwork==0">
+                        		<field name="emp"/>
+                        		<button name="check_employee" string="Open employee" type="object" icon="gtk-edit"  attrs="{'invisible':[('idhourofwork','!=',0)]}"/>
+                    			<field name="departement"/>
+                    			<separator orientation="vertical"/>
+        	            		<field name="nbtask" sum="Nbtask"/>
+            	        		<field name="htask" sum="Htask"/>
+            	        		<separator orientation="vertical"/>
+                	    		<field name="nbmeeting" sum="Nbmeeting"/>
+                    			<field name="hmeeting" sum="Hmeeting"/>
+                    			<separator orientation="vertical"/>
+                    			<field name="nbhelpdesk" sum="Nbhelpdesk"/>
+                    			<separator orientation="vertical"/>
+                   	 			<field name="nbconge" sum="Nbconge"/>
+                   	 			<field name="hconge" sum="Hconge"/>
+                   	 			<separator orientation="vertical"/>
+                   				<field name="tpstotalemp" sum="TpsTot"/>
+ 	                    		<field name="tpsoccupemp" sum="TpsOcc"/>
+    	                		<field name="tpsdispoemp" sum="TpsDisp"/>
+    	                		<separator orientation="vertical"/>
+                   				<field name="busyp" widget="progressbar" avg="Avg. of Availability"/>
+                   				<separator orientation="vertical"/>
+                   				<button name="check_shared_calendar" string="Open Shared calendar" type="object" icon="terp-go-month"/>
+                   				<field name="idresource" invisible="1"/>
+                   				<field name="iduser" invisible="1"/>
+                   				<field name="idemp" invisible="1"/>
+                   				<field name="idhourofwork" invisible="1"/>
+                   			</tree>                   			
+                   		</field>
+                    	</page>
+                    	</notebook>
+                    	</group>
+                    	<newline/>
+                    	<group colspan="4" groups="base.group_planning_management_user,base.group_planning_management_manager,base.group_planning_management_admin">
+                    	<separator string="Management, allocation and statistical" colspan="4" orientation="horizontal"/>                   	
+                    	<notebook colspan="4">
+                    	<page string="Tasks" groups="base.group_planning_management_user,base.group_planning_management_manager,base.group_planning_management_admin">
+                    	    <field name="task" colspan="1" nolabel="1" readonly="0"/>	      			
+                    	</page>
+                    	<page string="Meetings" groups="base.group_planning_management_user,base.group_planning_management_manager,base.group_planning_management_admin">
+                   		    <field name="meeting" nolabel="1" readonly="0" />       			
+                    	</page>
+                    	<page string="Helpdesks" groups="base.group_planning_management_user,base.group_planning_management_manager,base.group_planning_management_admin">
+                   		    <field name="helpdesk" nolabel="1" readonly="0"/>       			
+                    	</page>
+                    	<page string="Before" groups="base.group_planning_management_manager,base.group_planning_management_admin">
+                        <field colspan="4" name="planning_before" nolabel="1" widget="one2many_list" readonly="1">
+                            <tree string="List of task, meeting, helpdesk, leave to be completed before the planning" colors="red:idhourofwork==0">
+                        		<field name="emp"/>
+                    			<field name="departement"/>
+                    			<separator orientation="vertical"/>
+        	            		<field name="nbtask" sum="Nbtask"/>
+        	            		<separator orientation="vertical"/>
+        	            		<button name="check_task" string="Open tasks" type="object" icon="gtk-edit"/>
+        	            		<separator orientation="vertical"/>
+                	    		<field name="nbmeeting" sum="Nbmeeting"/>
+                	    		<separator orientation="vertical"/>
+        	            		<button name="check_meeting" string="Open meetings" type="object" icon="gtk-edit"/> 
+                	    		<separator orientation="vertical"/>
+                	    		<field name="nbhelpdesk" sum="Nbhelpdesk"/>
+                	    		<separator orientation="vertical"/>
+        	            		<button name="check_helpdesk" string="Open helpdesks" type="object" icon="gtk-edit"/>
+                	    		<separator orientation="vertical"/>
+                   	 			<field name="nbconge" sum="Nbconge"/>
+                   	 			<separator orientation="vertical"/>
+        	            		<button name="check_leave" string="Open leaves" type="object" icon="gtk-edit"/>
+                   				<field name="idresource" invisible="1"/>
+                   				<field name="iduser" invisible="1"/>
+                   				<field name="idemp" invisible="1"/>
+                   				<field name="idhourofwork" invisible="1"/>
+                   			</tree>                   			
+                   		</field>
+                    	</page>
+                    	<page string="Without deadline" groups="base.group_planning_management_manager,base.group_planning_management_admin">
+                        <field colspan="4" name="planning_without_deadline" nolabel="1" widget="one2many_list" readonly="1">
+                            <tree string="Tasks without deadline or not started" colors="red:idhourofwork==0">
+                        		<field name="emp"/>
+                    			<field name="departement"/>
+                    			<separator orientation="vertical"/>
+    	                		<separator orientation="vertical"/>
+        	            		<field name="nbtask1" sum="Nbtask1"/>
+        	            		<separator orientation="vertical"/>
+        	            		<field name="nbtask2" sum="Nbtask2"/>
+         	            		<separator orientation="vertical"/>
+                   				<button name="check_task_without_deadline" string="Open tasks" type="object" icon="gtk-edit"/>
+                   				<field name="idresource" invisible="1"/>
+                   				<field name="iduser" invisible="1"/>
+                   				<field name="idemp" invisible="1"/>
+                   				<field name="idhourofwork" invisible="1"/>
+                   			</tree>                   			
+                   		</field>
+                    	</page> 
+                    </notebook> 
+                    </group>                
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="capacity_planning_filter">
+            <field name="name">capacity.planning.filter</field>
+            <field name="model">capacity.planning</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Capacity Planning">
+                    <field name="name" select="1"/>
+                    <field name="startdate" select="1" string="Start date" />
+                    <field name="enddate" select="1" string="End date" />
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'startdate'}"/>
+                    </group>                                       
+                </search>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_capacity_planning_form">
+            <field name="name">Capacity planning</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">capacity.planning</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="capacity_planning_tree_view"/>
+        </record>
+       
+        <!-- planning generator -->
+        
+        <record model="ir.ui.view" id="planning_generator_form_view">
+            <field name="name">planning.generator.form</field>
+            <field name="model">planning.generaor</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Planning generator">
+                    <field name="year"/>
+                    <field name="in_part"/>
+                    <field name="sel_department"/>
+                    <button name="capacity_generator" colspan="2" string="Generate" type="object" groups="base.group_planning_management_manager,base.group_planning_management_admin"/>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_capacity_planning_config_form">
+            <field name="name">Planning generator</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">planning.generator</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="planning_generator_form_view"/>
+        </record>
+         
+        <menuitem name="Planning" parent="base.menu_main_pm" id="planning_menu_mainform2" sequence="2" groups="base.group_planning_management_manager,base.group_planning_management_user,base.group_planning_management_admin"/>          
+        <menuitem name="Capacity planning" parent="planning_menu_mainform2" id="capacity_planning_menu_mainform" action="action_capacity_planning_form" groups="base.group_planning_management_manager,base.group_planning_management_user,base.group_planning_management_admin"/>
+        <menuitem name="Capacity planning" parent="project.menu_definitions" id="capacity_configuration_sc_menu_mainform_conf" sequence="2" groups="base.group_planning_management_admin"/>
+        <menuitem name="Générateur de planning" parent="capacity_configuration_sc_menu_mainform_conf" id="capacity_configuration_genrator" sequence="1" action="action_capacity_planning_config_form"/>
+        
+    </data>
+</openerp>

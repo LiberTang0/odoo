@@ -31,12 +31,12 @@
     It also provides a real-time integration for quotation, sales, purchases and deliveries. 
     Actions in OpenERP generate requests toward Ingram to get informations, or to place an order directly, 
     without using any external tool or website. 
-    
     """,
     'website': 'http://www.bhc.be/en/application/ingram-micro',
-    "data": ["product_view.xml","purchase_view.xml","sale_view.xml","stock_picking_view.xml","ingram_config_view.xml","security/ir.model.access.csv",'workflow.xml','scheduler.xml'],
-    'demo_xml': [],
     'images': ['images/Sale_Order.png','images/Ingram_Category.png','images/Purchase_Order.png','images/Delivery.png',],
+    "init_xml": [],
+    'update_xml': ["product_view.xml","purchase_view.xml","sale_view.xml","stock_picking_view.xml","ingram_config_view.xml","security/ir.model.access.csv",'workflow.xml','scheduler.xml'],
+    'demo_xml': [],
     'installable': True,
     'active': False,
 }

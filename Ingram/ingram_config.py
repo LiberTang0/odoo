@@ -34,10 +34,12 @@ import tools
 import smtplib
 import sys
 from tools.translate import _
+import logging
 from datetime import date,datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 class ingram_rel_tax(osv.osv):
+    _name = "ingram_rel_tax"
     _description = "Tax relation with configuration"    
     _columns={
                'id_tax' : fields.integer("id taxe"),
@@ -88,6 +90,38 @@ class ingram_config(osv.osv):
                                     'ingram_config',domain=[('parent_id', '=', False),('type_tax_use','in',['purchase','all'])]),
     }
     
+    def check_ftp(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        ingrams = self.browse(cr, uid, ids)
+        config = self.read(cr,uid,ids,['server_address','server_login','server_passwd','chemin'])
+        ip = config[0]['server_address']
+        login = config[0]['server_login']
+        passwd = config[0]['server_passwd']
+        chm=str(config[0]['chemin'])
+        try:
+            ftp=ftplib.FTP()
+        except:
+            raise osv.except_osv(_('Error!'), _("FTP was not started!"))
+            return False
+        ip=ip.split('/')
+        txt=""
+        for i in range(len(ip)):
+           if i>0:
+                txt+="/"+ip[i]
+        try:
+            ftp.connect(ip[0])
+            if login:
+                ftp.login(login,passwd)
+            else:
+                ftp.login()
+        except:
+            raise osv.except_osv(_('Error!'), _("Username/password FTP connection was not successfully!"))
+            return False
+        ftp.close()
+        raise osv.except_osv(_('Ok!'), _("FTP connection was successfully!")) 
+        return True
+    
     def create(self, cr, uid, vals, context=None):
         ids=self.search(cr,uid,[])
         if len(ids)>0:
@@ -97,22 +131,19 @@ class ingram_config(osv.osv):
     def sendTextMail(self,cr,uid,ids,title,mess):
         _from = 'Ingram Error <Ingram@bhc.be>'
         to=self.browse(cr,uid,ids[0]).mailto
-        dest=''
-        for i in to:
-            dest+=i[0]
-        dest=dest.split(';')
-        _to = [] 
-        for i in dest:
-	        _to.append(i)
-        _subject = title
-        txt = "From:%s\r\nTo:%s\r\nSubject:%s\r\n" % (_from,_to,_subject)
+        to=to.replace(';',',')
+        txt=''
         if mess:
             txt += "\r\n"
             txt += mess
             txt += "\r\n"
-        s = smtplib.SMTP('relay.skynet.be')
-        s.sendmail(_from, _to, txt)
-        s.quit()
+        mail_obj=self.pool.get('mail.message')
+        res=mail_obj.create(cr,uid,{'subject':title,
+                                'email_from':'ingram@openerp.com',
+                                'email_to':to,
+                                'body_text':txt,
+                                'state':'outgoing'})
+        print res
 
     def write(self, cr, uid, ids, values, context=None):
         idtaxevente=self.pool.get('ingram_config').browse(cr,uid,1).taxes_ventes
@@ -142,6 +173,7 @@ class ingram_config(osv.osv):
                         empl = self.pool.get('product.product').search(cr,uid,[('product_tmpl_id','=',j),])
                         for i in tab3:
                             self.pool.get('product.product').write(cr,uid,empl,{'taxes_id': [(3,i)]})
+                
                 tab=[]
                 tab2=[]
                 tab3=[]
@@ -153,7 +185,6 @@ class ingram_config(osv.osv):
                 for i in idtaxeAchat:
                     if not ( i.id in values['taxes_achats'][0][2] ):
                         tab3.append(i.id)
-                
                 if (tab2):
                     idProd=self.pool.get('product.template').search(cr,uid,[('ingram','=',True),])
                     for j in idProd:
@@ -217,9 +248,11 @@ class ingram_config(osv.osv):
         view = self.browse(cr,uid,ids)
         name_config = view[0].name        
         val=self.browse(cr,uid,ids)[0].synchro_active
+        print val
         if not val :
             self.write(cr,uid,ids,{'synchro_active':True})
             id_config = self.search(cr,uid,[('name','=',name_config),])
+            return False
             self.ajoutlog('Telechargement des fichiers')
             result=self.import_data(cr,uid,id_config,context)
             if result==True:
@@ -277,10 +310,8 @@ class ingram_config(osv.osv):
             idProd=self.pool.get('product.template').search(cr,uid,[('ingram','=',True),('last_synchro_ingram','<',date)])
             if idProd :
                 for i in idProd:
-                    print "n°",i
                     val=self.pool.get('product.product').search(cr,uid,[('product_tmpl_id','=',i)])
                     if val:
-                        print val
                         self.pool.get('product.product').write(cr,uid,val[0],{'active':False})
             self.ajoutlog('donnnee nettoyee')
             return True
@@ -293,7 +324,6 @@ class ingram_config(osv.osv):
     def delete_data(self,cr,uid,ids,context=None):
        idProd=self.pool.get('product.template').search(cr,uid,[('ingram','=',True),])
        for i in idProd:
-           print "n ",i
            val=self.pool.get('product.product').search(cr,uid,[('product_tmpl_id','=',i)])
            if val:
                self.pool.get('product.product').write(cr,uid,val[0],{'active':False})
@@ -336,7 +366,7 @@ class ingram_config(osv.osv):
         try:
             compteur=0
             for i in listefich:
-                if str(i)=="Price2.txt" :
+                if str(i)=="Price2.txt":
                     fichier = open(chm+'/'+i,'rb')
                     fichiercsv = csv.reader(fichier, delimiter=',')
                     for ligne in fichiercsv:
@@ -346,29 +376,28 @@ class ingram_config(osv.osv):
                             name=''
                             lgt=len(nom)
                             while (i < lgt):
-                            	try:
+                                try:
                                     nom[i].decode('latin-1')
                                     name +=nom[i]
                                     i+=1
                                 except:
                                     i+=1
                             nom=name[0:127]
-
+ 
                             desc=ligne[13]
                             descr=''
                             lgt=len(desc)
                             j=0
                             while (j < lgt):
-                            	try:
+                                try:
                                     desc[j].decode('latin-1')
                                     descr +=desc[j]
                                     j+=1
                                 except:
                                     j+=1
                             desc=descr
-
-                            print "n:",compteur , nom
-
+ 
+                            print "n:",compteur , nom , desc
                             empl = self.pool.get('product.product').search(cr,uid,[('default_code','=',ligne[0]),])
                             if empl:
                                 resultas =self.pool.get('product.product').read(cr,uid,empl,['product_tmp'])
@@ -395,7 +424,7 @@ class ingram_config(osv.osv):
                                             self.pool.get('product.product').write(cr,uid,empl,{'supplier_taxes_id': [(4,i.id)]})
                                 
                                 if (len(ligne[2])==12):
-                                    ligne[4]="0"+ligne[4]
+                                    ligne[2]="0"+ligne[2]
                                 if len(ligne[2]) == 13 :
                                      self.pool.get('product.product').write(cr,uid,empl,{'default_code':ligne[0],'name_template':nom,
                                         'price_extra':0.00,'active':'TRUE','ean13':ligne[2],'vpn':ligne[1],'manufacturer':ligne[5],'active':True})
@@ -417,18 +446,16 @@ class ingram_config(osv.osv):
                                     idtaxesvente=self.pool.get('ingram_config').browse(cr,uid,1).taxes_ventes
                                     idtaxesAchat=self.pool.get('ingram_config').browse(cr,uid,1).taxes_achats                               
                                     if (len(ligne[2])==12):
-                                         ligne[4]="0"+ligne[4]
+                                         ligne[2]="0"+ligne[2]
                                     if len(ligne[2]) == 13 :
                                         
                                         id_prod=self.pool.get('product.product').create(cr,uid,{'default_code':ligne[0],'name_template':nom,
                                                             'price_extra':0.00,'active':'TRUE','product_tmpl_id':id,'ean13':ligne[2],'vpn':ligne[1],'manufacturer':ligne[5],
                                                             })
-
                                         for i in idtaxesvente:
                                             self.pool.get('product.product').write(cr,uid,id_prod,{'taxes_id': [(4,i.id)]})
                                         for i in idtaxesAchat:
                                             self.pool.get('product.product').write(cr,uid,id_prod,{'supplier_taxes_id': [(4,i.id)]})
-                                                                           
                                     else:
                                         id_prod=self.pool.get('product.product').create(cr,uid,{'default_code':ligne[0],'name_template':nom,
                                                             'price_extra':0.00,'active':'TRUE','product_tmpl_id':id,'vpn':ligne[1],'manufacturer':ligne[5],
@@ -440,6 +467,7 @@ class ingram_config(osv.osv):
                                     self.pool.get('product.supplierinfo').create(cr,uid,{'name':supplier[0],'min_qty':0,'product_id':id})
                                     compteur+=1
                     fichier.close()
+                
             id_conf = self.search(cr,uid,[])
             self.write(cr,uid,id_conf,{'date_synchro' : time.strftime("%Y-%m-%d %H:%M:%S")}) 
             return True       
@@ -447,8 +475,8 @@ class ingram_config(osv.osv):
             logger = netsvc.Logger()
             logger.notifyChannel('BHC_Ingram', netsvc.LOG_CRITICAL,"Erreur Synchro_produit")
             self.sendTextMail(cr,uid,id_config,"Erreur Synchronisation Produits","Une erreur est apparue lors de la synchronisation des produits.\n \nDetail de cette erreur: \n\t %s" %(sys.exc_info()[0]))
-            return False    
-       
+            return False                
+        
     def download(self,cr,uid,pathsrc, pathdst,ftp):
         try:
             lenpathsrc = len(pathsrc)
@@ -501,7 +529,7 @@ class ingram_config(osv.osv):
                         print "n:",compteur
                         if not(self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[1])])):
                             if (ligne[1]!= idparent):
-                                idparOpen=self.pool.get('product.category').create(cr,uid,{'name':ligne[2],'parent_id':categ,'categ_ingram':ligne[2],'code_categ_ingram':ligne[1]})
+                                idparOpen=self.pool.get('product.category').create(cr,uid,{'name':ligne[2],'parent_id':categ,'code_categ_ingram':ligne[1]})
                                 idparent=ligne[1]    
                         else:
                             if (ligne[1]!= idparent):
@@ -511,25 +539,25 @@ class ingram_config(osv.osv):
                                     if (self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[3])])):
                                         idenfOpen=self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[3])])[0]
                                     else:
-                                        idenfOpen=self.pool.get('product.category').create(cr,uid,{'name':ligne[4],'parent_id':idparOpen,'categ_ingram':ligne[4],'code_categ_ingram':ligne[3]})
+                                        idenfOpen=self.pool.get('product.category').create(cr,uid,{'name':ligne[4],'parent_id':idparOpen,'code_categ_ingram':ligne[3]})
                                     idenf=ligne[3]
                                     if not (self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[5])])):
-                                            self.pool.get('product.category').create(cr,uid,{'name':ligne[6],'parent_id':idenfOpen,'categ_ingram':ligne[6],'code_categ_ingram':ligne[5]})
+                                            self.pool.get('product.category').create(cr,uid,{'name':ligne[6],'parent_id':idenfOpen,'code_categ_ingram':ligne[5]})
                                 else:
                                     if not (self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[5])])):
-                                        self.pool.get('product.category').create(cr,uid,{'name':ligne[6],'parent_id':idenfOpen,'categ_ingram':ligne[6],'code_categ_ingram':ligne[5]})
+                                        self.pool.get('product.category').create(cr,uid,{'name':ligne[6],'parent_id':idenfOpen,'code_categ_ingram':ligne[5]})
                             else:
                                 if (ligne[3] != idenf):
                                     if (self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[3])])):
                                         idenfOpen=self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[3])])[0]
                                     else:
-                                        idenfOpen=self.pool.get('product.category').create(cr,uid,{'name':ligne[4],'parent_id':idparOpen,'categ_ingram':ligne[4],'code_categ_ingram':ligne[3]})
+                                        idenfOpen=self.pool.get('product.category').create(cr,uid,{'name':ligne[4],'parent_id':idparOpen,'code_categ_ingram':ligne[3]})
                                     idenf=ligne[3]
                                     if not (self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[5])])):
-                                        self.pool.get('product.category').create(cr,uid,{'name':ligne[6],'parent_id':idenfOpen,'categ_ingram':ligne[6],'code_categ_ingram':ligne[5]})
+                                        self.pool.get('product.category').create(cr,uid,{'name':ligne[6],'parent_id':idenfOpen,'code_categ_ingram':ligne[5]})
                                 else:
                                     if not (self.pool.get('product.category').search(cr,uid,[('code_categ_ingram','=',ligne[5])])):
-                                        self.pool.get('product.category').create(cr,uid,{'name':ligne[6],'parent_id':idenfOpen,'categ_ingram':ligne[6],'code_categ_ingram':ligne[5]})
+                                        self.pool.get('product.category').create(cr,uid,{'name':ligne[6],'parent_id':idenfOpen,'code_categ_ingram':ligne[5]})
                         compteur+=1
         except:
             logger = netsvc.Logger()
@@ -541,4 +569,5 @@ class ingram_config(osv.osv):
     def ajoutlog(self,txt):
         logger = netsvc.Logger()
         logger.notifyChannel('BHC_Ingram', netsvc.LOG_INFO, txt)
+
 ingram_config()

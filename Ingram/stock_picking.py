@@ -34,7 +34,6 @@ from tools import config
 from tools.translate import _
 from datetime import datetime, timedelta 
 
-
 class history_command(osv.osv):
     _name = "history.command"
     _description = "History of the status of the commands"
@@ -43,7 +42,8 @@ class history_command(osv.osv):
         'date': fields.date("Expected Date",help="Expected Date"),
         'datemaj': fields.date("Updated date",help="Updated date"),
         'idmani': fields.many2one("stock.picking","idLabel"),
-        'description':fields.char('Description',255)    }
+        'description':fields.char('Description',255)    
+        }
 
     def miseAjour(self,cr,uid,ids,date,description,statut,skuliste):
         for id in ids:
@@ -153,7 +153,6 @@ class stock_picking(osv.osv):
            'date_ingr': fields.date("Delivry date",help="Delivry date"),
            'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
-
     }
     
     def button_status(self,cr,uid,ids,context=None):
@@ -186,12 +185,20 @@ class stock_picking(osv.osv):
                 
                 raise osv.except_osv(_('Warning!'),_('Connexion failed'))
             response = conn.getresponse()
-            print response
             data = response.read()
-            print data
             self.ajoutlog(data) 
             conn.close()
-            logfile = open('ReponseXML.log', 'a') 
+            fs=file('/etc/openerp-server.conf',"r")
+            for line in fs:
+                if 'addons_path' in line:
+                    test=line.split('\n')
+                    addons_path=test[0].split(" ")
+            x=0
+            for i in addons_path:
+                x+=1    
+                if '/' in i:
+                    path=i
+            logfile = open(path + 'BHC_Ingram/ReponseXML.log', 'a') 
             logfile.write(data)
             logfile.close()
             return  self.traitement(cr,uid,ids,data)
@@ -225,7 +232,7 @@ class stock_picking(osv.osv):
             requete +="</BusinessTransactionRequest>"  
             
             return requete
-
+    
     def traitement(self,cr,uid,ids,reponse):
             dom = xml.dom.minidom.parseString(reponse)            
             return self.handleSlideshow(cr,uid,ids,dom)
