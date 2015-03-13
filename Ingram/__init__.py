@@ -23,4 +23,5 @@ import sale
 import purchase
 import stock_picking
 import product
+import procurement
 import ingram_config

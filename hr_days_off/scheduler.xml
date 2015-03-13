@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<openerp>		
+   <data noupdate="1">	
+		<record forcecreate="True" id="ir_cron_import_ingram"  model="ir.cron">		
+			<field name="name">Holidays Generator</field>	
+			<field eval="False" name="active" />		
+			<field name="user_id" ref="base.user_root" />		
+			<field name="interval_number">12</field>		
+			<field name="interval_type">months</field>		
+			<field name="numbercall">-1</field>		
+			<field eval="True" name="doall" />		
+			<field eval="'training.holiday.year.wizard'" name="model" />		
+			<field eval="'action_apply_scheduler'" name="function" />
+			<field eval="'(False,)'" name="args" />	
+		</record>		
+   </data>	
+</openerp>

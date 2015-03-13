@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="res.groups" id="group_trends_admin">
+            <field name="name">Trends administrator</field>
+        </record> 
+        <record model="res.groups" id="group_trends_user">
+            <field name="name">Trends User</field>
+        </record>         
+    </data>
+</openerp>        

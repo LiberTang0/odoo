@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>   
+<openerp>
+    <data>
+        <record id="message_message_tree" model="ir.ui.view">
+           <field name="name">message.result.tree</field>
+           <field name="model">message.message</field>
+           <field name="type">tree</field>
+           <field name="arch" type="xml">
+                <tree string="Sms history">
+                   <field name="datime" /> 
+                   <field name="partner_id" />
+                   <field name="number" />
+                   <field name="message"/>
+                   <field name="deliverystatus" />
+                   <field name="state" />
+                </tree>
+           </field>
+         </record>
+         <record id="message_message_form" model="ir.ui.view">
+           <field name="name">message.result.form</field>
+           <field name="model">message.message</field>
+           <field name="type">form</field>
+           <field name="arch" type="xml">
+                <form string="Sms history" version="7.0">
+                    <header>
+                            <button name="sms_send" type="object" states="notsend" string="Send"/>
+                            <field name="state" widget="statusbar" statusbar_visible="send,notsend" statusbar_colors='{"send":"green","notsend":"red"}'/>
+                    </header>
+                   <sheet>
+                       <group>
+	                        <group>
+	                           <field name="datime" />
+	                           <field name="number" />
+	                           <field name="template" />
+	                           <field name="mess_id"/>
+	                        </group>
+	                        <group>
+	                           <field name="partner_id" />
+	                           <field name="message" />
+	                           <field name="deliverystatus" />
+	                           <button name="check_state" type="object" string="Check Delivery State"/>
+	                        </group>
+	                    </group>
+                    </sheet>
+                </form>
+           </field>
+       </record> 
+       <record id="action_message_message" model="ir.actions.act_window">
+            <field name="name">Sended History</field>
+            <field name="res_model">message.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+       <menuitem action="action_message_message" id="menu_message_message" parent="menu_message_parent"/>
+       
+       <record model="ir.ui.view" id="sms_check_state">
+            <field name="name">sms.check.state</field>
+            <field name="model">sms.check.state</field>
+            <field name="arch" type="xml">
+                <form string="Delivery State" version="7.0">
+                   <sheet>
+                        <group>
+                           <label string="Are you sure to check the state for this sms?"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="check_state_ids" string="Send" type="object"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <act_window name="Check Delivery State"
+            res_model="sms.check.state"
+            src_model="message.message"
+            view_type="form"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_check_state_delivery"/>
+        
+    </data>
+</openerp>

@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_training_holiday_manager","training.holiday.year","model_training_holiday_year","base.group_hr_manager",1,1,1,1
+"access_training_holiday_period","training.holiday.period","model_training_holiday_period","base.group_hr_manager",1,1,1,1
+"access_training_holiday_year_wizard","training.holiday.year.wizard","model_training_holiday_year_wizard","base.group_hr_manager",1,1,1,1
+"access_training_holiday_user_year","training.holiday.year","model_training_holiday_year","base.group_user",1,0,0,0
+"access_training_holiday_user","training.holiday.period","model_training_holiday_period","base.group_user",1,0,0,0

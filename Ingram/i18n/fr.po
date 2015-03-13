@@ -89,7 +89,7 @@ msgstr "Commande fournisseur"
 #: code:addons/BHC_Ingram/purchase.py:152
 #, python-format
 msgid "Already send order"
-msgstr "Commande déjà envoyée"
+msgstr "Commande déja envoyée"
 
 #. module: BHC_Ingram
 #: code:addons/BHC_Ingram/ingram_config.py:140

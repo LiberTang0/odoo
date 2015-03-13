@@ -1,0 +1,928 @@
+﻿# -*- coding: utf-8 -*-
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* trends
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0-20130818-231031\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-09-10 09:11+0000\n"
+"PO-Revision-Date: 2013-09-10 09:11+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: trends
+#: model:ir.actions.act_window,help:trends.open_view_trends_figurelist
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"             Click to add a new trends figure list\n"
+"           </p>\n"
+"         "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"             Cliquez pour ajouter une nouvelle figure\n"
+"           </p>\n"
+"         "
+
+#. module: trends
+#: field:trends.tva.empty,rating:0
+msgid "Ra"
+msgstr "Ra"
+
+#. module: trends
+#: view:trends.search:0
+#: selection:trends.search,vat_type:0
+msgid "Ranking"
+msgstr "Ranking"
+
+#. module: trends
+#: field:trends.tva.empty,fax:0
+msgid "Fax"
+msgstr "Fax"
+
+#. module: trends
+#: selection:trends.config,type:0
+msgid "XML"
+msgstr "XML"
+
+#. module: trends
+#: field:trends.search,res_tva_social:0
+msgid "VAT social answer"
+msgstr "reponse social TVA"
+
+#. module: trends
+#: code:addons/trends/trends.py:142
+#, python-format
+msgid "Impossible to load function list"
+msgstr "Impossible de charger la liste des fonctions"
+
+#. module: trends
+#: field:trends.tva.figures,financial_year:0
+#: field:trends.tva.ratios,financial_year:0
+#: field:trends.tva.social,financial_year:0
+msgid "Financial Year"
+msgstr "Annee Financiere"
+
+#. module: trends
+#: field:trends.tva.empty,sectore:0
+#: field:trends.who,sectore:0
+msgid "Sector"
+msgstr "Secteur"
+
+#. module: trends
+#: field:trends.config,url:0
+msgid "URL"
+msgstr "URL"
+
+#. module: trends
+#: field:trends.figures,value:0
+#: field:trends.figures.ratios,value:0
+#: field:trends.figures.social,value:0
+msgid "Value"
+msgstr "Valeur"
+
+#. module: trends
+#: view:trends.search:0
+#: selection:trends.search,vat_type:0
+msgid "Social"
+msgstr "Social"
+
+#. module: trends
+#: field:trends.search,res_tva_management:0
+msgid "VAT management answer"
+msgstr "reponse management TVA"
+
+#. module: trends
+#: field:trends.search,where:0
+msgid "Where"
+msgstr "Lieu"
+
+#. module: trends
+#: field:trends.search,vat:0
+#: field:trends.tva.empty,vat:0
+#: field:trends.tva.figures,vat:0
+#: field:trends.tva.management,vat:0
+#: field:trends.tva.ranking,name:0
+#: field:trends.tva.ratios,vat:0
+#: field:trends.tva.social,vat:0
+#: field:trends.who,vat:0
+msgid "VAT"
+msgstr "TVA"
+
+#. module: trends
+#: field:trends.search,name:0
+msgid "name"
+msgstr "nom"
+
+#. module: trends
+#: view:trends.config:0
+msgid "Load Nacebel List"
+msgstr "Charger la liste Nacebel"
+
+#. module: trends
+#: field:trends.tva.empty,telephone:0
+msgid "Telephone"
+msgstr "Telephone"
+
+#. module: trends
+#: model:ir.actions.act_window,name:trends.open_view_trends_sectorlist
+#: model:ir.ui.menu,name:trends.menu_open_view_trends_sectorlist
+#: view:trends.sectorlist:0
+msgid "Trends Sector List"
+msgstr "Liste des secteurs"
+
+#. module: trends
+#: field:trends.tva.empty,sector_code:0
+#: field:trends.who,sectore_code:0
+msgid "Sector Code"
+msgstr "Code secteur"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_tva_management
+msgid "Result for search tva filter by management"
+msgstr "Resultat pour la recherche sur la tva filtree par management"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_figurelist
+msgid "Figure list for trends"
+msgstr "Liste des figures"
+
+#. module: trends
+#: field:trends.search,res_tva_figures:0
+msgid "VAT figures answer"
+msgstr "Reponse pour la TVA figure"
+
+#. module: trends
+#: view:trends.search:0
+#: selection:trends.search,vat_type:0
+msgid "Management"
+msgstr "Management"
+
+#. module: trends
+#: field:trends.search,search_type:0
+msgid "Search type"
+msgstr "Type de recherche"
+
+#. module: trends
+#: model:ir.actions.act_window,help:trends.open_view_trends_nacebellist
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"             Click to add a new trends nacebel list\n"
+"           </p>\n"
+"         "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"             Cliquez pour ajouter un nouveau nacebel\n"
+"           </p>\n"
+"         "
+
+#. module: trends
+#: selection:trends.config,language:0
+msgid "EN"
+msgstr "EN"
+
+#. module: trends
+#: field:trends.figures,trends_figures_id:0
+#: field:trends.figures.ratios,trends_figures_id:0
+#: field:trends.figures.social,trends_figures_id:0
+#: field:trends.tva.empty,trends_search_id:0
+#: field:trends.tva.figures,trends_search_id:0
+#: field:trends.tva.management,trends_search_id:0
+#: field:trends.tva.ranking,trends_search_id:0
+#: field:trends.tva.ratios,trends_search_id:0
+#: field:trends.tva.social,trends_search_id:0
+#: field:trends.who,trends_search_id:0
+msgid "Trends Search Id"
+msgstr "Trends Search Id"
+
+#. module: trends
+#: field:trends.tva.ranking,sectorrankingturnover:0
+msgid "Sector Ranking Turnover"
+msgstr "Sector Ranking Turnover"
+
+#. module: trends
+#: field:trends.config,type:0
+msgid "Type"
+msgstr "Type"
+
+#. module: trends
+#: field:trends.tva.empty,email:0
+#: field:trends.tva.management,email:0
+msgid "Email"
+msgstr "Email"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_figures_social
+msgid "Figure result for social"
+msgstr "Resultat des figures pour le social"
+
+#. module: trends
+#: code:addons/trends/trends.py:249
+#, python-format
+msgid "Error !"
+msgstr "Erreur !"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_tva_ratios
+msgid "Result for search tva filter by ratios"
+msgstr "Resultat pour la recherche tva filtree par ratios"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_figures
+msgid "Figure result"
+msgstr "Resultat des figures"
+
+#. module: trends
+#: field:trends.search,configuration:0
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: trends
+#: field:trends.search,res_tva_ranking:0
+msgid "VAT ranking answer"
+msgstr "Reponse TVA ranking"
+
+#. module: trends
+#: field:trends.tva.management,function_code:0
+msgid "Function Code"
+msgstr "Code de la fonction"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_sectorlist
+msgid "Sector list for trends"
+msgstr "Liste des secteurs"
+
+#. module: trends
+#: field:trends.tva.empty,house_number_suffix:0
+msgid "House Number Suffix"
+msgstr "Suffixe Numero"
+
+#. module: trends
+#: field:trends.tva.ranking,toprankingturnover:0
+msgid "Top Ranking Turnover"
+msgstr "Top Ranking Turnover"
+
+#. module: trends
+#: field:trends.tva.management,language_code:0
+msgid "Language Code"
+msgstr "Code de la langue"
+
+#. module: trends
+#: field:trends.who,zip:0
+msgid "Zip code"
+msgstr "Code postal"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_tva_empty
+msgid "Result for search tva without filter"
+msgstr "Resultat pour la recherche de la tva sans filtre"
+
+#. module: trends
+#: code:addons/trends/trends.py:447
+#, python-format
+msgid "This point is not implemented yet"
+msgstr "Ce point n'est pas encore implemente"
+
+#. module: trends
+#: model:ir.actions.act_window,name:trends.open_view_trends_search
+#: model:ir.ui.menu,name:trends.menu_open_view_trends_search
+#: view:trends.search:0
+msgid "Trends Research"
+msgstr "Recherche Trends"
+
+#. module: trends
+#: field:trends.sectorlist,description_long:0
+msgid "Long Description"
+msgstr "Description longue"
+
+#. module: trends
+#: field:trends.tva.management,last_name:0
+msgid "Last Name"
+msgstr "Nom"
+
+#. module: trends
+#: field:trends.tva.empty,official_name:0
+msgid "Official Name"
+msgstr "Nom officiel"
+
+#. module: trends
+#: selection:trends.config,language:0
+msgid "FR"
+msgstr "FR"
+
+#. module: trends
+#: field:trends.tva.empty,house_number:0
+msgid "House Number"
+msgstr "Numero"
+
+#. module: trends
+#: field:trends.search,vat_type:0
+msgid "Type VAT search"
+msgstr "Type de recherche TVA"
+
+#. module: trends
+#: field:trends.tva.ranking,toprankingaddedvalue:0
+msgid "Top Ranking Added Value"
+msgstr "Top Ranking Added Value"
+
+#. module: trends
+#: field:trends.search,res_tva_ratios:0
+msgid "VAT ratios answer"
+msgstr "Reponse TVA ratios"
+
+#. module: trends
+#: model:ir.actions.act_window,help:trends.open_view_trends_search
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"             Click to add a new trends Research\n"
+"           </p>\n"
+"         "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"             Cliquez pour ajouter une nouvelle recherche\n"
+"           </p>\n"
+"         "
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_config
+msgid "Configuration for trends"
+msgstr "Trends Configuration"
+
+#. module: trends
+#: view:trends.search:0
+#: selection:trends.search,vat_type:0
+msgid "Empty"
+msgstr "Sans filtre"
+
+#. module: trends
+#: field:trends.tva.empty,website:0
+msgid "Website"
+msgstr "site web"
+
+#. module: trends
+#: field:trends.config,api_key:0
+msgid "API Key"
+msgstr "cle API"
+
+#. module: trends
+#: selection:trends.config,language:0
+msgid "NL"
+msgstr "NL"
+
+#. module: trends
+#: view:trends.config:0
+msgid "Load Figure List"
+msgstr "Charger la liste des figures"
+
+#. module: trends
+#: model:ir.actions.act_window,name:trends.open_view_trends_config
+#: model:ir.ui.menu,name:trends.menu_open_view_trends_config
+#: view:trends.config:0
+msgid "Trends Configuration"
+msgstr "Trends Configuration"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_tva_ranking
+msgid "Result for search tva filter by ranking"
+msgstr "Resultat pour la recherche tva filtree par ranking"
+
+#. module: trends
+#: selection:trends.search,search_type:0
+msgid "vat"
+msgstr "tva"
+
+#. module: trends
+#: field:trends.tva.ranking,sectorrankingrddedvalue:0
+msgid "Sector Ranking Added Value"
+msgstr "Sector Ranking Added Value"
+
+#. module: trends
+#: code:addons/trends/trends.py:121
+#, python-format
+msgid "Impossible to load Figure list"
+msgstr "Impossible de charger la liste des figures"
+
+#. module: trends
+#: view:trends.search:0
+#: selection:trends.search,vat_type:0
+msgid "Ratios"
+msgstr "Ratios"
+
+#. module: trends
+#: field:trends.config,language:0
+msgid "Language"
+msgstr "Langue"
+
+#. module: trends
+#: code:addons/trends/trends.py:192
+#: code:addons/trends/trends.py:449
+#, python-format
+msgid "The type is not defined"
+msgstr "Le type n'est pas defini"
+
+#. module: trends
+#: model:ir.actions.act_window,help:trends.open_view_trends_functionlist
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"             Click to add a new trends function list\n"
+"           </p>\n"
+"         "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"             Cliquez pour ajouter une nouvelle fonction\n"
+"           </p>\n"
+"         "
+
+#. module: trends
+#: field:trends.tva.figures,balancetype:0
+#: field:trends.tva.ratios,balancetype:0
+#: field:trends.tva.social,balancetype:0
+msgid "Balance Type"
+msgstr "Type de balance"
+
+#. module: trends
+#: model:ir.actions.act_window,help:trends.open_view_trends_config
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"             Click to add a new trends configuration\n"
+"           </p>\n"
+"         "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"             Cliquez pour ajouter une nouvelle configuration\n"
+"           </p>\n"
+"         "
+
+#. module: trends
+#: field:trends.tva.empty,postal_code:0
+msgid "Postal Code"
+msgstr "Code postal"
+
+#. module: trends
+#: model:ir.actions.act_window,name:trends.open_view_trends_functionlist
+#: model:ir.ui.menu,name:trends.menu_open_view_trends_functionlist
+#: view:trends.functionlist:0
+msgid "Trends Function List"
+msgstr "Liste des fonctions"
+
+#. module: trends
+#: view:trends.config:0
+msgid "Load Sector List"
+msgstr "Charger la liste des secteurs"
+
+#. module: trends
+#: field:trends.figurelist,code:0
+#: field:trends.figures,name:0
+#: field:trends.figures.ratios,name:0
+#: field:trends.figures.social,name:0
+#: field:trends.functionlist,code:0
+#: field:trends.nacebellist,code:0
+#: field:trends.sectorlist,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: trends
+#: field:trends.tva.empty,nacebel:0
+msgid "Nacebel"
+msgstr "Nacebel"
+
+#. module: trends
+#: field:trends.search,res_who:0
+msgid "Who answer"
+msgstr "Reponse du qui"
+
+#. module: trends
+#: view:trends.search:0
+msgid "General"
+msgstr "Generale"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_functionlist
+msgid "Function list for trends"
+msgstr "Liste des fonctions"
+
+#. module: trends
+#: field:trends.tva.empty,city:0
+#: field:trends.who,city:0
+msgid "City"
+msgstr "Ville"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_search
+msgid "Search on trends"
+msgstr "Recherche trends"
+
+#. module: trends
+#: model:res.groups,name:trends.group_trends_user
+msgid "Trends User"
+msgstr "Trends Utilisateur"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_tva_social
+msgid "Result for search tva filter by social"
+msgstr "Resultat pour la recherche tva filtree par social"
+
+#. module: trends
+#: field:trends.tva.empty,company_number:0
+msgid "Company Number"
+msgstr "Numero de la societe"
+
+#. module: trends
+#: code:addons/trends/trends.py:249
+#, python-format
+msgid "You need to define a search type"
+msgstr "Vous devez definir un type de recherche"
+
+#. module: trends
+#: code:addons/trends/trends.py:266
+#, python-format
+msgid "Impossible to do this action"
+msgstr "Impossible de realiser cette action
+
+#. module: trends
+#: view:trends.search:0
+msgid "Run Search"
+msgstr "Lancer la recherche"
+
+#. module: trends
+#: field:trends.tva.management,function:0
+msgid "Function"
+msgstr "Fonction"
+
+#. module: trends
+#: model:ir.actions.act_window,help:trends.open_view_trends_sectorlist
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"             Click to add a new trends sector list\n"
+"           </p>\n"
+"         "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"             Cliquez pour ajouter un nouveau secteur\n"
+"           </p>\n"
+"         "
+
+#. module: trends
+#: field:trends.figurelist,name:0
+#: field:trends.figures,description:0
+#: field:trends.figures.ratios,description:0
+#: field:trends.figures.social,description:0
+#: field:trends.functionlist,name:0
+#: field:trends.nacebellist,name:0
+#: field:trends.sectorlist,name:0
+msgid "Description"
+msgstr "Description"
+
+#. module: trends
+#: field:trends.search,who:0
+msgid "Who"
+msgstr "Qui"
+
+#. module: trends
+#: view:trends.config:0
+msgid "Load Function List"
+msgstr "Charger la liste des fonctions"
+
+#. module: trends
+#: model:ir.actions.act_window,name:trends.open_view_trends_nacebellist
+#: model:ir.ui.menu,name:trends.menu_open_view_trends_nacebellist
+#: view:trends.nacebellist:0
+msgid "Trends Nacebel List"
+msgstr "Liste Nacebel"
+
+#. module: trends
+#: field:trends.config,pwd:0
+msgid "Password"
+msgstr "Mot de passe"
+
+#. module: trends
+#: field:trends.tva.empty,name:0
+#: field:trends.tva.management,name:0
+#: field:trends.who,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: trends
+#: field:trends.tva.management,gender:0
+msgid "Gender"
+msgstr "Genre"
+
+#. module: trends
+#: selection:trends.search,search_type:0
+msgid "who"
+msgstr "qui"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_who
+msgid "Result for search who on trends"
+msgstr "Resultat pour la recherche qui"
+
+#. module: trends
+#: field:trends.search,res_tva_empty:0
+msgid "VAT answer"
+msgstr "Reponse TVA"
+
+#. module: trends
+#: view:trends.search:0
+#: selection:trends.search,vat_type:0
+#: field:trends.tva.figures,figures_ids:0
+#: field:trends.tva.ratios,figures_ids:0
+#: field:trends.tva.social,figures_ids:0
+msgid "Figures"
+msgstr "Figures"
+
+#. module: trends
+#: model:res.groups,name:trends.group_trends_admin
+msgid "Trends administrator"
+msgstr "Trends administration"
+
+#. module: trends
+#: field:trends.config,name:0
+msgid "Login"
+msgstr "Login"
+
+#. module: trends
+#: model:ir.actions.act_window,name:trends.open_view_trends_figurelist
+#: model:ir.ui.menu,name:trends.menu_open_view_trends_figurelist
+#: view:trends.figurelist:0
+msgid "Trends Figure List"
+msgstr "Liste des figures"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_figures_ratios
+msgid "Figure result ratios for ratios"
+msgstr "Resultat des figure pour le ratios"
+
+#. module: trends
+#: field:trends.tva.empty,nacebel_code:0
+msgid "Nacebel Code"
+msgstr "Code Nacebel"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_tva_figures
+msgid "Result for search tva filter by figures"
+msgstr "Resultat pour la recherche tva filtree par figures"
+
+#. module: trends
+#: code:addons/trends/trends.py:99
+#, python-format
+msgid "Impossible to load nacebel list"
+msgstr "Impossible de charger la liste nacebel"
+
+#. module: trends
+#: field:trends.config,states:0
+#: field:trends.search,states:0
+msgid "States"
+msgstr "Etat"
+
+#. module: trends
+#: field:trends.tva.figures,durationmonths:0
+#: field:trends.tva.ratios,durationmonths:0
+#: field:trends.tva.social,durationmonths:0
+msgid "Duration Months"
+msgstr "Duree en mois"
+
+#. module: trends
+#: field:trends.tva.empty,street:0
+msgid "Street"
+msgstr "Rue"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_nacebellist
+msgid "Nacebel list for trends"
+msgstr "Liste Nacebel"
+
+#. module: trends
+#: code:addons/trends/trends.py:77
+#, python-format
+msgid "Impossible to load sector list"
+msgstr "Impossible de charger la liste des secteurs"
+
+#. module: trends
+#: code:addons/trends/trends.py:837
+#, python-format
+msgid "You can't create lead if you don't accept to save the data in your configuration"
+msgstr "Vous ne pouvez pas créer de lead si vous n'acceptez pas de sauvegarder les données (vérifiez votre configuration Trends)"
+
+#. module: trends
+#: code:addons/trends/trends.py:198
+#, python-format
+msgid "Figure list loaded"
+msgstr "Liste des figures chargées"
+
+#. module: trends
+#: code:addons/trends/res_partner.py:126
+#, python-format
+msgid "You can't load data if you don't accept to save the data in your configuration"
+msgstr "Vous ne pouvez pas charger les données si vous n'acceptez de les sauvegarder (vérifiez votre configuration Trends)"
+
+#. module: trends
+#: code:addons/trends/trends.py:67
+#: code:addons/trends/trends.py:106
+#, python-format
+msgid "You can't have two trends account for the same user"
+msgstr "Vous ne pouvez pas avoir deux comptes Trends pour le même utilisateur"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_who_search
+msgid "Search who on trends"
+msgstr "Recherche des personnes sur Trends"
+
+#. module: trends
+#: code:addons/trends/res_partner.py:129
+#, python-format
+msgid "You need to define a vat for this partner"
+msgstr "Vous devez définir une TVA pour ce partenaire"
+
+#. module: trends
+#: view:trends.nacebellist:0
+msgid "Search Trends Nacebel List"
+msgstr "Recherche liste Nacebel"
+
+#. module: trends
+#: code:addons/trends/crm_lead.py:90
+#: code:addons/trends/res_partner.py:65
+#, python-format
+msgid "You need to define a configuration for your user"
+msgstr "Vous devez définir une configuration pour votre utilisateur"
+
+#. module: trends
+#: field:trends.config,save:0
+msgid "Save data"
+msgstr "Sauvegarder les données"
+
+#. module: trends
+#: view:trends.figurelist:0
+#: view:trends.functionlist:0
+#: view:trends.nacebellist:0
+#: view:trends.sectorlist:0
+msgid "Code Sector"
+msgstr "Code Secteur"
+
+#. module: trends
+#: view:trends.type.list:0
+msgid "Search Trends Type List"
+msgstr "Recherche des types de liste"
+
+#. module: trends
+#: code:addons/trends/crm_lead.py:116
+#: code:addons/trends/res_partner.py:91
+#, python-format
+msgid "No Data find for this vat number on trends"
+msgstr "Pas de données trouvées pour ce numéro de TVA sur Trends"
+
+#. module: trends
+#: code:addons/trends/res_partner.py:120
+#: code:addons/trends/trends.py:244
+#: code:addons/trends/trends.py:817
+#, python-format
+msgid "Impossible to interract with your credit"
+msgstr "Impossible d'interragire avec votre crédit"
+
+#. module: trends
+#: view:trends.who.search:0
+msgid "Create Lead"
+msgstr "Créer une lead"
+
+#. module: trends
+#: field:trends.tva.empty,trends_whoo_id:0
+#: field:trends.tva.figures,trends_whoo_id:0
+#: field:trends.tva.management,trends_whoo_id:0
+#: field:trends.tva.ranking,trends_whoo_id:0
+#: field:trends.tva.ratios,trends_whoo_id:0
+#: field:trends.tva.social,trends_whoo_id:0
+msgid "Trends Who Id"
+msgstr "Id trends pour la recher de personne"
+
+#. module: trends
+#: field:trends.figures,trends_figures_id:0
+#: field:trends.figures.ratios,trends_figures_id:0
+#: field:trends.figures.social,trends_figures_id:0
+#: field:trends.tva.empty,trends_search_id:0
+#: field:trends.tva.figures,trends_search_id:0
+#: field:trends.tva.management,trends_search_id:0
+#: field:trends.tva.ranking,trends_search_id:0
+#: field:trends.tva.ratios,trends_search_id:0
+#: field:trends.tva.social,trends_search_id:0
+#: field:trends.who,trends_search_id:0
+#: field:trends.who,trends_search_who_id:0
+msgid "Trends Search Id"
+msgstr "Id Trends pour la recherche"
+
+#. module: trends
+#: view:trends.sectorlist:0
+msgid "Search Trends Sector List"
+msgstr "Liste des secteurs Trends"
+
+#. module: trends
+#: code:addons/trends/res_partner.py:123
+#: code:addons/trends/trends.py:834
+#, python-format
+msgid "You don't have enought credit /n You need %d credit and you only have %d credit"
+msgstr "Vous devez avoir assez de crédit /n Vous avez besoin de %d crédit et vous avez seulement %d crédit"
+
+#. module: trends
+#: model:ir.actions.act_window,help:trends.open_view_trends_type_list
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"             Click to add a new trends type\n"
+"           </p>\n"
+"         "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"             Cliquez pour ajouter un nouveau type\n"
+"           </p>\n"
+"         "
+
+#. module: trends
+#: field:crm.lead,state_trends:0
+msgid "State trends"
+msgstr "Etat trends"
+
+#. module: trends
+#: field:trends.tva.ranking,sectorrankingrddedvalue:0
+msgid "Sector Ranking Added Value"
+msgstr "Ranking ajouté"
+
+#. module: trends
+#: code:addons/trends/crm_lead.py:97
+#: code:addons/trends/res_partner.py:73
+#, python-format
+msgid "You need to define a type needed"
+msgstr "Vous devez définir le type souhaité"
+
+#. module: trends
+#: code:addons/trends/trends.py:242
+#, python-format
+msgid "Credit refreshed"
+msgstr "Crédits rafraichit"
+
+#. module: trends
+#: model:ir.model,name:trends.model_trends_type_list
+msgid "Trends Type list"
+msgstr "Liste des types trends"
+
+#. module: trends
+#: code:addons/trends/trends.py:175
+#, python-format
+msgid "Nacerbel list loaded"
+msgstr "Nacerbel liste chargée"
+
+#. module: trends
+#: code:addons/trends/crm_lead.py:124
+#, python-format
+msgid "Impossible to connect to Trends"
+msgstr "Impossible de se conecter à Trends"
+
+#. module: trends
+#: code:addons/trends/trends.py:220
+#, python-format
+msgid "Function list loaded"
+msgstr "La liste des fonctions est chargée"
+
+#. module: trends
+#: view:trends.config:0
+msgid "Refresh your credit"
+msgstr "Mettre à jour les crédits"
+
+#. module: trends
+#: code:addons/trends/crm_lead.py:121
+#, python-format
+msgid "You need to define a vat for this lead"
+msgstr "Vous devez définir une TVA pour ce lead"
+
+#. module: trends
+#: help:trends.config,save:0
+msgid "If checked, we save data after the importation (only if you have enough credit)"
+msgstr "Si coché, vous pouvez sauvegarder les données trends (seulement si vous avez assez de crédit)"
+
+#. module: trends
+#: code:addons/trends/trends.py:151
+#, python-format
+msgid "Sector list loaded"
+msgstr "Liste des secteurs chargée"
+
+#. module: trends
+#: model:ir.ui.menu,name:trends.menu_trends_using
+msgid "Research"
+msgstr "Recherche"
+
+#. module: trends
+#: view:res.partner:0
+msgid "e.g. BE0477472701"
+msgstr "ex. BE0477472701"
+
+#. module: trends
+#: field:crm.lead,vat:0
+msgid "Vat"
+msgstr "Tva"
+
+#. module: trends
+#: model:ir.ui.menu,name:trends.menu_trends_config
+#: field:trends.search,configuration:0
+#: field:trends.who.search,configuration:0
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: trends
+#: model:ir.actions.act_window,name:trends.open_view_trends_who_search
+#: model:ir.ui.menu,name:trends.menu_open_view_trends_who_search
+#: view:trends.who.search:0
+msgid "Trends Who Research"
+msgstr "Recherche par nom"
+
+#. module: trends
+#: constraint:trends.config:0
+msgid "The login must be unique."
+msgstr "Le login doit être unique."

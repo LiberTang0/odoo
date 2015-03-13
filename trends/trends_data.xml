@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="empty" model="trends.type.list">
+            <field name="name">Empty</field> 
+        </record>
+        <record id="ranking" model="trends.type.list">
+            <field name="name">Ranking</field> 
+        </record>
+        <record id="management" model="trends.type.list">
+            <field name="name">Management</field> 
+        </record>
+        <record id="ratios" model="trends.type.list">
+            <field name="name">Ratios</field> 
+        </record>
+        <record id="figures" model="trends.type.list">
+            <field name="name">Figures</field> 
+        </record>
+        <record id="social" model="trends.type.list">
+            <field name="name">Social</field> 
+        </record>                
+
+    </data>
+</openerp>

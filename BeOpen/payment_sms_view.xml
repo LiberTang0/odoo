@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>   
+<openerp>
+    <data>
+        <record id="paiment_tree" model="ir.ui.view">
+           <field name="name">paiment.result.tree</field>
+           <field name="model">paiment.paiment</field>
+           <field name="type">tree</field>
+           <field name="arch" type="xml">
+                <tree string="paiment result">
+                   <field name="telephone" />
+                   <field name="amount" />
+                   <field name="description" />
+                   <field name="referenceCode" />
+                   <field name="purchaseCategoryCode" />
+                   <field name="taxAmount" />
+                   <field name="transactionOperationStatus" />
+                   <field name="clientCorrelator" />
+                </tree>
+           </field>
+        </record>
+        <record id="paiment_form" model="ir.ui.view">
+           <field name="name">paiment.result.form</field>
+           <field name="model">paiment.paiment</field>
+           <field name="type">form</field>
+           <field name="arch" type="xml">
+                <form string="paiment result">
+                   <field name="telephone" />
+                   <field name="transactionOperationStatus" />
+                   <field name="amount" />
+                   <field name="description" />
+                   <field name="referenceCode" />
+                   <field name="currency" />
+                   <field name="purchaseCategoryCode" />
+                   <field name="channel" />
+                   <field name="taxAmount" />
+                   <field name="OnBehalfOf" />
+                   <field name="response" />
+                   <field name="clientCorrelator" />
+                   <button string="Paiment" name="paimentSMS" type="object" icon="gtk-send"/>
+                </form>
+           </field>
+       </record>
+        <record id="action_paiement_message" model="ir.actions.act_window">
+            <field name="name">Payment History</field>
+            <field name="res_model">paiment.paiment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+       <menuitem action="action_paiement_message" id="menu_paiement_message" parent="menu_message_parent"/>
+    </data>
+</openerp>

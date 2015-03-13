@@ -1,0 +1,219 @@
+﻿# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* BHC_day_off
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0-20130904-231132\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-27 09:31+0000\n"
+"PO-Revision-Date: 2014-03-27 09:31+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: BHC_day_off
+#: model:ir.actions.act_window,name:BHC_day_off.holiday_categ_all_act
+#: model:ir.ui.menu,name:BHC_day_off.holiday_categ_all_mi
+#: field:training.holiday.period,categ:0
+msgid "Category"
+msgstr "Catégories"
+
+#. module: BHC_day_off
+#: code:addons/BHC_day_off/day_off.py:62
+#, python-format
+msgid "No date specified for 'Is in period' holiday period check"
+msgstr "Aucune date spécifiée pour cette période dans les périodes de congés"
+
+#. module: BHC_day_off
+#: model:ir.model,name:BHC_day_off.model_training_holiday_period
+msgid "training.holiday.period"
+msgstr "Périodes"
+
+#. module: BHC_day_off
+#: sql_constraint:training.holiday.year:0
+msgid "The year must be unique !"
+msgstr "L'année doit être unique !"
+
+#. module: BHC_day_off
+#: view:training.holiday.period:0
+msgid "Group By..."
+msgstr "Groupé par..."
+
+#. module: BHC_day_off
+#: code:addons/BHC_day_off/holiday.py:91
+#, python-format
+msgid "Configuration Error !"
+msgstr "Configuration Erreur !"
+
+#. module: BHC_day_off
+#: view:training.holiday.year.wizard:0
+msgid "_Apply"
+msgstr "_Générer"
+
+#. module: BHC_day_off
+#: view:training.holiday.period:0
+msgid "Futures Periods"
+msgstr "Future Périodes"
+
+#. module: BHC_day_off
+#: view:training.holiday.year.wizard:0
+msgid "Generate Week-End"
+msgstr "Génération de Week-End"
+
+#. module: BHC_day_off
+#: model:ir.model,name:BHC_day_off.model_training_holidays_category
+msgid "training.holidays.category"
+msgstr "Catégorie"
+
+#. module: BHC_day_off
+#: constraint:training.holiday.period:0
+msgid "Please, check the start date !"
+msgstr "Sélectionnez une date de début!"
+
+#. module: BHC_day_off
+#: view:training.holiday.period:0
+msgid "Holiday Period"
+msgstr "Période de congés"
+
+#. module: BHC_day_off
+#: view:training.holidays.category:0
+msgid "Holiday Category"
+msgstr "catégorie de congé"
+
+#. module: BHC_day_off
+#: model:ir.model,name:BHC_day_off.model_hr_holidays
+msgid "Holidays"
+msgstr "Vacances"
+
+#. module: BHC_day_off
+#: code:addons/BHC_day_off/day_off.py:117
+#: code:addons/BHC_day_off/day_off.py:161
+#, python-format
+msgid "Week-End %02d"
+msgstr "Week-End %02d"
+
+#. module: BHC_day_off
+#: field:training.holiday.period,date_stop:0
+msgid "Date Stop"
+msgstr "Date de fin"
+
+#. module: BHC_day_off
+#: field:training.holiday.period,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: BHC_day_off
+#: model:ir.model,name:BHC_day_off.model_training_holiday_year_wizard
+msgid "training.holiday.year.wizard"
+msgstr "training.holiday.year.wizard"
+
+#. module: BHC_day_off
+#: code:addons/BHC_day_off/day_off.py:102
+#: code:addons/BHC_day_off/day_off.py:146
+#, python-format
+msgid "Please enter valid year"
+msgstr "Entrez une année valide!"
+
+#. module: BHC_day_off
+#: field:training.holiday.period,name:0
+#: field:training.holidays.category,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: BHC_day_off
+#: view:training.holiday.period:0
+#: field:training.holiday.year,period_ids:0
+msgid "Holiday Periods"
+msgstr "Période de congés"
+
+#. module: BHC_day_off
+#: code:addons/BHC_day_off/holiday.py:92
+#, python-format
+msgid "Please, Can you configure the week-end holidays ?"
+msgstr "Configurer les congés svp ?"
+
+#. module: BHC_day_off
+#: code:addons/BHC_day_off/day_off.py:101
+#: code:addons/BHC_day_off/day_off.py:145
+#, python-format
+msgid "Error!"
+msgstr "Erreur!"
+
+#. module: BHC_day_off
+#: code:addons/BHC_day_off/day_off.py:61
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: BHC_day_off
+#: model:ir.ui.menu,name:BHC_day_off.holiday_mi
+msgid "Days off"
+msgstr "Week-end"
+
+#. module: BHC_day_off
+#: view:training.holiday.year:0
+msgid "Holiday Year"
+msgstr "Congés annuel"
+
+#. module: BHC_day_off
+#: view:training.holiday.period:0
+msgid "Search Holiday Period Email"
+msgstr "Recherche"
+
+#. module: BHC_day_off
+#: model:ir.actions.act_window,name:BHC_day_off.holiday_year_wizard_act
+#: model:ir.ui.menu,name:BHC_day_off.holiday_year_wizard_mi
+msgid "Week-end Generator"
+msgstr "Générateur de week-end"
+
+#. module: BHC_day_off
+#: model:ir.actions.act_window,name:BHC_day_off.holiday_year_all_act
+#: model:ir.ui.menu,name:BHC_day_off.holiday_year_all_mi
+msgid "Years"
+msgstr "Années"
+
+#. module: BHC_day_off
+#: view:training.holiday.year:0
+msgid "Holiday Years"
+msgstr "Années de congés"
+
+#. module: BHC_day_off
+#: model:ir.actions.act_window,name:BHC_day_off.holiday_period_all_act
+#: model:ir.ui.menu,name:BHC_day_off.holiday_period_all_mi
+#: model:ir.ui.menu,name:BHC_day_off.holiday_period_user_mi
+#: view:training.holiday.year:0
+msgid "Periods"
+msgstr "Périodes"
+
+#. module: BHC_day_off
+#: view:training.holiday.year.wizard:0
+msgid "_Cancel"
+msgstr "_Annuler"
+
+#. module: BHC_day_off
+#: view:training.holiday.period:0
+#: field:training.holiday.period,year_id:0
+#: field:training.holiday.year,year:0
+#: field:training.holiday.year.wizard,year:0
+msgid "Year"
+msgstr "Année"
+
+#. module: BHC_day_off
+#: model:ir.model,name:BHC_day_off.model_training_holiday_year
+msgid "training.holiday.year"
+msgstr "Année"
+
+#. module: BHC_day_off
+#: field:training.holiday.period,date_start:0
+msgid "Date Start"
+msgstr "Date de début"
+
+#. module: BHC_day_off
+#: view:training.holiday.year:0
+msgid "Search Holiday Year"
+msgstr "Recherche"
+

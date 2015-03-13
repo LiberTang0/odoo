@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+     
+         <record model="ir.ui.menu" id="menu_open_view_trends_config">
+            <field eval="[(6,0,[ref('group_trends_admin')])]" name="groups_id"/>
+        </record>
+                
+         <record model="ir.ui.menu" id="menu_open_view_trends_sectorlist">
+            <field eval="[(6,0,[ref('group_trends_admin')])]" name="groups_id"/>
+        </record>         
+         
+         <record model="ir.ui.menu" id="menu_open_view_trends_nacebellist">
+            <field eval="[(6,0,[ref('group_trends_admin')])]" name="groups_id"/>
+        </record>
+        
+        <record model="ir.ui.menu" id="menu_open_view_trends_figurelist">
+            <field eval="[(6,0,[ref('group_trends_admin')])]" name="groups_id"/>
+        </record>
+        
+        
+        <record model="ir.ui.menu" id="menu_open_view_trends_functionlist">
+            <field eval="[(6,0,[ref('group_trends_admin')])]" name="groups_id"/>
+        </record>          
+        
+        <record model="ir.ui.menu" id="menu_open_view_trends_search">
+            <field eval="[(6,0,[ref('group_trends_admin')])]" name="groups_id"/>
+        </record>   
+        
+        <record model="ir.ui.menu" id="menu_open_view_trends_search">
+            <field eval="[(6,0,[ref('group_trends_user')])]" name="groups_id"/>
+        </record>            
+    </data> 
+</openerp>

@@ -19,39 +19,39 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
-import logging
-_logger = logging.getLogger(__name__)
+import urllib
+import urllib2
+from xml.dom.minidom import Node
+from xml.dom.minidom import parse, parseString
+import xml.dom.minidom
+import socket
+import httplib
 import time
-import ftplib
-import pytz
-from openerp import SUPERUSER_ID
-import os
-import os.path
-import csv, math
-import thread
-import smtplib
-import sys
-from datetime import date,datetime, timedelta
-from dateutil.relativedelta import relativedelta
+import netsvc
+from osv import fields, osv
+from tools import config
+from tools.translate import _
+from datetime import datetime, timedelta 
 
-class product_category(models.Model):
+class product_category(osv.osv):
+    _name = 'product.category'
+    _description = 'Product Category'
     _inherit = 'product.category'
-    
-    code_categ_ingram = fields.Char(string='Ingram code category')
-    
+    _columns = {
+        'code_categ_ingram' : fields.char('Ingram code category',255),
+    }
 product_category()
 
-class product_product(models.Model):
+class product_product(osv.osv):
+    _name = "product.product"
+    _description = "Product"
     _inherit = 'product.product'
-    vpn = fields.Char(string="VPN",help="VPN code")
-    manufacturer = fields.Char(string="Manufacturer",help="Manufacturer")
+    _columns = {
+        'vpn': fields.char("VPN",255,help="VPN code"),
+        'manufacturer' : fields.char("Manufacturer",255,help="Manufacturer"),
+    }
 
-    @api.v7
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
-        print 'name_search'
         if not args:
             args=[]
         if not context:
@@ -70,10 +70,12 @@ class product_product(models.Model):
         return result        
 product_product()
 
-class product_template(models.Model):
+class product_template(osv.osv):
+    _name = "product.template"
+    _description = "Product"
     _inherit = 'product.template'
-
-    ingram = fields.Boolean(string='Ingram Product')
-    last_synchro_ingram = fields.Date(string='Date of last synchronization')
-
+    _columns = {
+                'ingram': fields.boolean('Ingram Product'),
+                'last_synchro_ingram': fields.date("Synchro Date",help="Synchro date"),
+}
 product_template()

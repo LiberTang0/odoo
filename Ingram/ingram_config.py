@@ -20,68 +20,112 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
 import logging
 _logger = logging.getLogger(__name__)
+from osv import fields, osv
 import time
 import ftplib
 import os
+import time
+import mx.DateTime
 import os.path
+import os
 import csv, math
+import datetime
 import thread
+import netsvc
+import tools
 import smtplib
 import sys
+from tools.translate import _
+import logging
 from datetime import date,datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
-class ingram_config(models.Model):
+class ingram_rel_tax(osv.osv):
+    _name = "ingram_rel_tax"
+    _description = "Tax relation with configuration"    
+    _columns={
+               'id_tax' : fields.integer("id taxe"),
+               'id_conf' : fields.integer("id conf"),
+    }
+
+class ingram_rel_tax_purchase(osv.osv):
+    _name = "ingram_rel_tax_purchase"
+    _description = "Tax relation with configuration"
+    _columns={
+               'id_tax' : fields.integer("id taxe"),
+               'id_conf' : fields.integer("id conf"),
+    }
+
+class ingram_config(osv.osv):
     _name = "ingram_config"
-    _description = "Configuration Management Produces Ingram"  
+    _description = "Configuration Management Produces Ingram"    
+    _columns={'name' : fields.char("Name",255,help="Name associated with the configuration", required=True),
+              'xml_address' : fields.char('Server Xml address',255,help="server Xml address"),
+              'xml_login' : fields.char('Login',255,help="Login for Xml request "),
+              'xml_passwd' : fields.char('Password',255,help="Password for Xml Request"),
+              'xml_active' : fields.boolean('XMl Request',help="Active the Xml Request"),
+              'server_address' : fields.char('Server address',255,help="server ip address",required=True),
+              'file_cat' : fields.char('Products Categories file name',255,help="Name of the file for the products categories",required=True),
+              'file_prod' : fields.char('Products File name',255,help="Name of the file for the products. Must be based on this header: 'Ingram Part Number,Vendor Part Number,EANUPC Code,Plant,Vendor Number,Vendor Name,Weight,Category ID,Customer Price,Retail Price,Availability Flag,BOM Flag,Warranty Flag,Material Long Description,Material Creation Reason code,Material Language Code,Music Copyright Fees,Recycling Fees,Document Copyright Fees,Battery Fees,Availability (Local Stock),Availability (Central Stock),Creation Reason Type,Creation Reason Value,Local Stock Backlog Quantity,Local Stock Backlog ETA,Central Stock Backlog Quantity,Central Stock Backlog ETA'",required=True),
+              'server_login' : fields.char('Login',255,help="Login database"),
+              'server_passwd' : fields.char('Password',255,help="Password database"),
+              'date_synchro' : fields.datetime('Date of last manually synchronization',readonly=True),
+              'date_import' : fields.datetime('Date of last manually importation',readonly=True),
+              'date_cron' : fields.datetime('Date of last cronjob synchronization',readonly=True),
+              'chemin' : fields.char("Path",255,help="Path where the files is stored", required=True),
+              'mailto' : fields.char("Warning Mail",255,help="Encode the adresses e-mail separated by ';'.\nThose e-mail will receive the warnings", required=True),
+              'synchro_active' : fields.boolean('Synchro active'),
+              'taxes_iden' : fields.integer('taxe id'),
+              'id_synchro' : fields.many2one('ir.cron','Cronjob',  required=True,help="Cronjob in OpenERP for automatic synchronization. To bind the Cronjob with the configuration, click the button"),
+              'categorie_name' : fields.char('Category',255,help="Name of the product categorie"),
+              'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]",help=" Location of new product"),
+              'country_id': fields.many2one('res.country', 'Country', required=True,help=" Country of Ingram supplier"),
+              'categorie_id':fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
+              'supplier_id' : fields.many2one('res.partner', 'Supplier', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Supplier of this product"),
+              'taxes_id': fields.many2many('account.tax', 'product_taxes_rel',
+                                    'prod_id', 'tax_id', 'Customer Taxes',
+                                    domain=[('parent_id','=',False),('type_tax_use','in',['sale','all'])]),
+              'supplier_taxes_id': fields.many2many('account.tax',
+                                    'product_supplier_taxes_rel', 'prod_id', 'tax_id',
+                                    'Supplier Taxes', domain=[('parent_id', '=', False),('type_tax_use','in',['purchase','all'])]),
+              'taxes_ventes': fields.many2many('account.tax',
+                                    'ingram_rel_tax', 'id_tax', 'id_conf',
+                                    'ingram_config',domain=[('parent_id', '=', False),('type_tax_use','in',['sale','all'])]),
+              'taxes_achats': fields.many2many('account.tax',
+                                    'ingram_rel_tax_purchase', 'id_tax', 'id_conf',
+                                    'ingram_config',domain=[('parent_id', '=', False),('type_tax_use','in',['purchase','all'])]),
+    }
+    _defaults = {
+        'file_cat':'PCAT_GENERIC.TXT',
+        'file_prod':'Price2.txt',
+    }
     
-    name = fields.Char(string="Name",help="Name associated with the configuration", required=True)
-    xml_address = fields.Char(string='Server Xml address',help="server Xml address")
-    xml_login = fields.Char(string='Login',help="Login for Xml request ")
-    xml_passwd = fields.Char(string='Password',help="Password for Xml Request")
-    xml_active = fields.Boolean(string='XMl Request',help="Active the Xml Request")
-    server_address = fields.Char(string='Server address',help="server ip address",required=True)
-    file_cat = fields.Char(string='Products Categories file name',default='PCAT_GENERIC.TXT',help="Name of the file for the products categories",required=True)
-    file_prod = fields.Char(string='Products File name',default='Price2.txt',help="Name of the file for the products. Must be based on this header: 'Ingram Part Number,Vendor Part Number,EANUPC Code,Plant,Vendor Number,Vendor Name,Weight,Category ID,Customer Price,Retail Price,Availability Flag,BOM Flag,Warranty Flag,Material Long Description,Material Creation Reason code,Material Language Code,Music Copyright Fees,Recycling Fees,Document Copyright Fees,Battery Fees,Availability (Local Stock),Availability (Central Stock),Creation Reason Type,Creation Reason Value,Local Stock Backlog Quantity,Local Stock Backlog ETA,Central Stock Backlog Quantity,Central Stock Backlog ETA'",required=True)
-    server_login = fields.Char(string='Login',help="Login database")
-    server_passwd = fields.Char(string='Password',help="Password database")
-    date_synchro = fields.Datetime(string='Date of last manually synchronization',readonly=True)
-    date_import = fields.Datetime(string='Date of last manually importation',readonly=True)
-    date_cron = fields.Datetime(string='Date of last cronjob synchronization',readonly=True)        
-    chemin = fields.Char(string="Path",help="Path where the files is stored", required=True)
-    mailto = fields.Char(string="Warning Mail",help="Encode the adresses e-mail separated by ';'.\nThose e-mail will receive the warnings", required=True)
-    pricelist = fields.Many2one('product.pricelist',string='Pricelist for the sales price',)
-    id_synchro = fields.Many2one('ir.cron',string='Cronjob', required=True,help="Cronjob in OpenERP for automatic synchronization. To bind the Cronjob with the configuration, click the button")
-    categorie_name = fields.Char(string='Category',help="Name of the product categorie")
-    location_id = fields.Many2one('stock.location',string='Location', required=True, domain=[('usage', '=', 'internal')],help="Location of new product")
-    country_id = fields.Many2one('res.country',string='Country', required=True,help=" Country of Ingram supplier")
-    categorie_id = fields.Many2one('product.category',string='Category', required=True, change_default=True, domain=[('type','=','normal')],help="Select category for the current product")
-    supplier_id = fields.Many2one('res.partner',string='Supplier', required=True, domain=[('supplier','=',True)], ondelete='cascade', help="Supplier of this product")
-    taxes_ventes = fields.Many2many('account.tax',"ingram_taxe_sales",'ingram_config',"taxe_id",string='Sales Taxes',domain=[('parent_id', '=', False),('type_tax_use','in',['sale','all'])])
-    taxes_achats = fields.Many2many('account.tax',"ingram_taxe_achat",'ingram_config2',"taxe_id2",string='Purchases Taxes',domain=[('parent_id', '=', False),('type_tax_use','in',['purchase','all'])])
- 
-    @api.onchange('supplier_id')
-    def onchange_supplier_id(self):
-        if self.supplier_id:
-            self.country_id=self.supplier_id.country_id.id
-
-    @api.one
-    def check_ftp(self):
-        ip = self.server_address
-        login = self.server_login
-        passwd = self.server_passwd
+    def onchange_supplier_id(self, cr, uid, ids, supp, context=None):
+        if supp:
+            idss=self.pool.get('res.partner').browse(cr,uid,supp)
+            return {'value': {'country_id':idss.country_id.id}}
+        return {'value': {'country_id': False}}
+    
+    def check_ftp(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        ingrams = self.browse(cr, uid, ids)
+        config = self.read(cr,uid,ids,['server_address','server_login','server_passwd','chemin'])
+        ip = config[0]['server_address']
+        login = config[0]['server_login']
+        passwd = config[0]['server_passwd']
+        chm=str(config[0]['chemin'])
         try:
             ftp=ftplib.FTP()
         except:
-            raise Warning(_('FTP was not started!'))
+            raise osv.except_osv(_('Error!'), _("FTP was not started!"))
             return False
         ip=ip.split('/')
         txt=""
         for i in range(len(ip)):
-            if i>0:
+           if i>0:
                 txt+="/"+ip[i]
         try:
             ftp.connect(ip[0])
@@ -90,169 +134,169 @@ class ingram_config(models.Model):
             else:
                 ftp.login()
         except:
-            raise Warning(_('Username/password FTP connection was not successfully!'))
+            raise osv.except_osv(_('Error!'), _("Username/password FTP connection was not successfully!"))
             return False
         ftp.close()
-        raise Warning(_('FTP connection was successfully!'))
+        raise osv.except_osv(_('Ok!'), _("FTP connection was successfully!")) 
         return True
     
-    @api.model
-    def create(self, vals):
-        config = self.env['ingram_config'].search([])
-        if config:
-            raise Warning(_('You can have only one configuration!'))
-        res = super(ingram_config, self).create(vals)
-        return res
-        
-    @api.one 
-    def sendTextMail(self,ids,title,mess):
+    def create(self, cr, uid, vals, context=None):
+        ids=self.search(cr,uid,[])
+        if len(ids)>0:
+            raise osv.except_osv(_('Error !'), _('You can have only one configuration'))
+        return super(ingram_config, self).create(cr, uid, vals, context)
+    
+    def sendTextMail(self,cr,uid,ids,title,mess):
         _from = 'Ingram Error <Ingram@bhc.be>'
-        to=ids.mailto
+        to=self.browse(cr,uid,ids[0]).mailto
         to=to.replace(';',',')
         txt=''
         if mess:
             txt += "\r\n"
             txt += mess
             txt += "\r\n"
-        mail_obj=self.env['mail.mail']
-        res=mail_obj.create({'subject':title,
-                            'email_from':'ingram@openerp.com',
-                            'email_to':to,
-                            'body_html':txt})
-    
-    @api.multi
-    def write(self, values):
-        idtaxevente=self.taxes_ventes
-        idtaxeAchat=self.taxes_achats
-        super(ingram_config, self).write(values)
-        prod_tmpl=self.env['product.template']
-        prod_prod=self.env['product.product']
+        mail_obj=self.pool.get('mail.mail')
+        res=mail_obj.create(cr,uid,{'subject':title,
+                                'email_from':'ingram@openerp.com',
+                                'email_to':to,
+                                'body_html':txt})
+
+    def write(self, cr, uid, ids, values, context=None):
+        idtaxevente=self.pool.get('ingram_config').browse(cr,uid,1).taxes_ventes
+        idtaxeAchat=self.pool.get('ingram_config').browse(cr,uid,1).taxes_achats
+        result = super(ingram_config, self).write(cr, uid, ids, values, context=context)
         if ('taxes_ventes' in values ):
-            tab=[]
-            tab2=[]
-            tab3=[]
-            for i in idtaxevente:
-                tab.append(i.id)
-            for j in values['taxes_ventes'][0][2]:
-                if not (j in tab ):
-                    tab2.append(j)
-            for i in idtaxevente:
-                if not (i.id in values['taxes_ventes'][0][2] ):
-                    tab3.append(i.id)
-            if tab2:
-                idProd=prod_tmpl.search([('ingram','=',True)])
-                for j in idProd:
-                    empl = prod_prod.search([('product_tmpl_id','=',j.id)])
-                    for k in values['taxes_ventes'][0][2]:
-                        empl.taxes_id = [(4,k)]
-            if tab3:
-                idProd=prod_tmpl.search([('ingram','=',True)])
-                for j in idProd:
-                    empl = prod_prod.search([('product_tmpl_id','=',j.id)])
-                    for i in tab3:
-                        empl.taxes_id = [(3,i)]
+                tab=[]
+                tab2=[]
+                tab3=[]
+                for i in idtaxevente:
+                    tab.append(i.id)
+                for j in values['taxes_ventes'][0][2]:
+                    if not ( j in tab ):
+                        tab2.append(j)
+                for i in idtaxevente:
+                    if not ( i.id in values['taxes_ventes'][0][2] ):
+                        tab3.append(i.id)
+                if tab2:
+                    idProd=self.pool.get('product.template').search(cr,uid,[('ingram','=',True),])
+                    for j in idProd:
+                        empl = self.pool.get('product.product').search(cr,uid,[('product_tmpl_id','=',j),])
+                        for k in values['taxes_ventes'][0][2]:
+                            self.pool.get('product.product').write(cr,uid,empl,{'taxes_id': [(4,k)]})
+                if tab3:
+                    idProd=self.pool.get('product.template').search(cr,uid,[('ingram','=',True),])
+                    for j in idProd:
+                        empl = self.pool.get('product.product').search(cr,uid,[('product_tmpl_id','=',j),])
+                        for i in tab3:
+                            self.pool.get('product.product').write(cr,uid,empl,{'taxes_id': [(3,i)]})
         if ('taxes_achats' in values ):
-            tab=[]
-            tab2=[]
-            tab3=[]
-            for i in idtaxeAchat:
-                tab.append(i.id)
-            for j in values['taxes_achats'][0][2]:
-                if not ( j in tab ):
-                    tab2.append(j)
-            for i in idtaxeAchat:
-                if not ( i.id in values['taxes_achats'][0][2] ):
-                    tab3.append(i.id)
-            if (tab2):
-                idProd=prod_tmpl.search([('ingram','=',True)])
-                for j in idProd:
-                    empl = prod_prod.search([('product_tmpl_id','=',j.id)])
-                    for i in values['taxes_achats'][0][2]:
-                        empl.supplier_taxes_id = [(4,i)]
-            if tab3:
-                idProd=prod_tmpl.search([('ingram','=',True)])
-                for j in idProd:
-                    empl = prod_prod.search([('product_tmpl_id','=',j.id)])
-                    for i in tab3:
-                        empl.taxes_id = [(3,i)]
+                tab=[]
+                tab2=[]
+                tab3=[]
+                for i in idtaxeAchat:
+                    tab.append(i.id)
+                for j in values['taxes_achats'][0][2]:
+                    if not ( j in tab ):
+                        tab2.append(j)
+                for i in idtaxeAchat:
+                    if not ( i.id in values['taxes_achats'][0][2] ):
+                        tab3.append(i.id)
+                if (tab2):
+                    idProd=self.pool.get('product.template').search(cr,uid,[('ingram','=',True),])
+                    for j in idProd:
+                        empl = self.pool.get('product.product').search(cr,uid,[('product_tmpl_id','=',j),])
+                        for i in values['taxes_achats'][0][2]:
+                            self.pool.get('product.product').write(cr,uid,empl,{'supplier_taxes_id': [(4,i)]})
+                if tab3:
+                    idProd=self.pool.get('product.template').search(cr,uid,[('ingram','=',True),])
+                    for j in idProd:
+                        empl = self.pool.get('product.product').search(cr,uid,[('product_tmpl_id','=',j),])
+                        for i in tab3:
+                            self.pool.get('product.product').write(cr,uid,empl,{'taxes_id': [(3,i)]})
+        return result 
     
-    @api.model
-    def cron_function(self):
-        id_config = self.search([('xml_active','=',True)])
+    def cron_function(self,cr,uid,context=None):
+        id_config = self.search(cr,uid,[('xml_active','=',True),])
         if not id_config:
             _logger.info('No config!')
             return False 
-        _logger.info(_('Download started'))
-        result=id_config.import_data(id_config)
-        if result[0]==True:
-            _logger.info(_('Download ended'))
-        else:
-            _logger.info(_('Download error'))
-            return False
-        _logger.info(_('Synchronization started'))
-        result2=id_config.synchro_categ(id_config)
-        if result2[0]==True:
-            _logger.info(_('products categories synchronization ended'))
-        else:
-            _logger.info(_('products categories synchronization error'))
-            return False
-        _logger.info(_('Products synchronization started'))
-        result3=id_config.synchronisation(id_config)
-        _logger.info(result3)
-        if result3[0]==True:
-            _logger.info(_('Products synchronization ended'))
-        else:
-            _logger.info(_('Products synchronization error'))
-            return False
-        _logger.info(_('Clean product started'))
-        result4=id_config.clean_data()
-        if result4[0]==True:
-            _logger.info(_('Clean product ended'))
-        else:
-            _logger.info(_('Clean product error'))
-            return False
-        id_config.clean_categ()
-        _logger.info(_('end synchronization'))
+        config = self.read(cr,uid,id_config,['server_address','server_login','server_passwd','chemin'])
+        chm=str(config[0]['chemin'])
+        val=self.browse(cr,uid,id_config)[0].synchro_active
+        if not val :
+            _logger.info('Download started')
+            result=self.import_data(cr,uid,id_config,context)
+            if result==True:
+                _logger.info('Download ended')
+            else:
+                _logger.info('Download error')
+                return False
+            _logger.info('Synchronization started')
+            result2=self.synchro_categ(cr,uid,id_config,context)
+            if result2==True:
+                _logger.info('products categories synchronization ended')
+            else:
+                _logger.info('products categories synchronization error')
+                return False
+            _logger.info('products synchronization started')
+            result3=self.synchronisation(cr,uid,id_config,context)
+            _logger.info(result3)
+            if result3==True:
+                _logger.info('products synchronization ended')
+            else:
+                _logger.info('products synchronization error')
+                return False
+            _logger.info('clean product started')
+            result4=self.clean_data(cr,uid,id_config,context)
+            if result4==True:
+                _logger.info('clean product ended')
+            else:
+                _logger.info('clean product error')
+                return False
+            self.clean_categ(cr,uid,id_config,context)
+        _logger.info('end synchronization')
         try :
-            id_config.date_cron = time.strftime("%Y-%m-%d %H:%M:%S")
+            self.write(cr,uid,id_config,{'date_cron' : time.strftime("%Y-%m-%d %H:%M:%S")})
         except:
             try :
-                id_config.date_cron = time.strftime("%Y-%m-%d %H:%M:%S")
+                self.write(cr,1,id_config,{'date_cron' : time.strftime("%Y-%m-%d %H:%M:%S")})
             except:pass
         _logger.info('Done')
         return True
     
-    @api.one
-    def button_import_data(self):
-        _logger.info(_('Download started'))
-        config_id=self
-        result=self.import_data(config_id)
-        if result[0]==True:
-            _logger.info(_('Download ended'))
-            try :
-                self.date_import = time.strftime("%Y-%m-%d %H:%M:%S")
-            except:
+    def button_import_data(self,cr,uid,ids,context=None):
+        view = self.browse(cr,uid,ids)
+        name_config = view[0].name        
+        val=self.browse(cr,uid,ids)[0].synchro_active
+        if not val :
+            id_config = self.search(cr,uid,[('name','=',name_config),])
+            _logger.info('Download started')
+            result=self.import_data(cr,uid,id_config,context)
+            if result==True:
+                _logger.info('Download ended')
                 try :
-                    self.date_import = time.strftime("%Y-%m-%d %H:%M:%S")
-                except:pass
-        else:
-            _logger.info(_('Download error'))
-            return False
-    
+                    self.write(cr,uid,id_config,{'date_import' : time.strftime("%Y-%m-%d %H:%M:%S")})
+                except:
+                    try :
+                        self.write(cr,1,id_config,{'date_import' : time.strftime("%Y-%m-%d %H:%M:%S")})
+                    except:pass
+            else:
+                _logger.info('Download error')
+                return False
+        
         return True
     
-    @api.one
-    def import_data(self,config_id):
-        config = config_id
-        ip = config.server_address
-        login = config.server_login
-        passwd = config.server_passwd
-        chm=str(config.chemin)
+    def import_data(self,cr,uid,id_config,context=None):
+        config = self.read(cr,uid,id_config,['server_address','server_login','server_passwd','chemin'])
+        ip = config[0]['server_address']
+        login = config[0]['server_login']
+        passwd = config[0]['server_passwd']
+        chm=str(config[0]['chemin'])
         try:
             ftp=ftplib.FTP()
         except:
-            _logger.error(_('connexion error'))
-            self.sendTextMail(config_id,"Connecion error","An error occured during the connection to the server.\n\nDetails: \n\t %s" %(sys.exc_info()[0]))
+            _logger.error('connection error')
+            self.sendTextMail(cr,uid,id_config,"Connecion error","An error occured during the connection to the server.\n\nDetails: \n\t %s" %(sys.exc_info()[0]))
             return False
         ip=ip.split('/')
         txt=""
@@ -268,17 +312,239 @@ class ingram_config(models.Model):
             ftp.retrlines('LIST')
             ftp.cwd(txt)
             ftp.retrlines('LIST')
-            self.download(config_id,'.',chm,ftp)
+            self.download(cr,uid,id_config,'.',chm,ftp)
             ftp.close()
+                
             return True
         except:
-            _logger.error(_('Download error'))
-            self.sendTextMail(config_id,"Import error","An error occured during the importation.\n\nDetails: \n\t %s" %(sys.exc_info()[0]))
+           _logger.error('Download error')
+           self.sendTextMail(cr,uid,id_config,"Import error","An error occured during the importation.\n\nDetails: \n\t %s" %(sys.exc_info()[0]))
+           return False
+#
+
+    def clean_data(self,cr,uid,ids,context=None):
+        _logger.info("Clean_data")
+        try:
+            aujourdhui = datetime.today()
+            semaine=timedelta(weeks=1)
+            date=aujourdhui - semaine
+            idProd=self.pool.get('product.product').search(cr,uid,['|',('active','=',True),('active','=',False),('product_tmpl_id.ingram','=',True),('product_tmpl_id.last_synchro_ingram','<',date)],order='id')
+            delete=0
+            undelete=0
+            use=0
+            for i in idProd:
+                ids1=self.pool.get('sale.order.line').search(cr,uid,[('product_id','=',i)])
+                ids2=self.pool.get('purchase.order.line').search(cr,uid,[('product_id','=',i)])
+                ids3=self.pool.get('procurement.order').search(cr,uid,[('product_id','=',i)])
+                ids4=self.pool.get('stock.move').search(cr,uid,[('product_id','=',i)])
+                ids5=self.pool.get('account.invoice.line').search(cr,uid,[('product_id','=',i)])
+                if not ids1 and not ids2 and not ids3 and not ids4 and not ids5:
+                    try:
+                        self.pool.get('product.product').unlink(cr,uid,[i])
+                        delete+=1
+                    except:
+                        _logger.info('Delete impossible')
+                        undelete+=1
+                else:
+                    self.pool.get('product.product').write(cr,uid,i,{'active':False})
+                    use+=1
+            _logger.info('Products deleted : %s'%(delete))
+            _logger.info('Products non deleted : %s'%(use))
+            _logger.info('product cleaned')
+            return True
+        except:
+            _logger.error("Erreur Clean_data")
+            self.sendTextMail(cr,uid,ids,"Error products cleaning","An error occured during the cleaning.\n\nDetails: \n\t %s" %(sys.exc_info()[0]))
             return False
-       
-    @api.one
-    def download(self,config_id,pathsrc, pathdst,ftp):
-        idss=config_id
+    
+    def delete_data(self,cr,uid,ids,context=None):
+            idProd=self.pool.get('product.product').search(cr,uid,['|',('active','=',True),('active','=',False),('product_tmpl_id.ingram','=',True)],order='id')
+            delete=0
+            undelete=0
+            use=0
+            for i in idProd:
+                ids1=self.pool.get('sale.order.line').search(cr,uid,[('product_id','=',i)])
+                ids2=self.pool.get('purchase.order.line').search(cr,uid,[('product_id','=',i)])
+                ids3=self.pool.get('procurement.order').search(cr,uid,[('product_id','=',i)])
+                ids4=self.pool.get('stock.move').search(cr,uid,[('product_id','=',i)])
+                ids5=self.pool.get('account.invoice.line').search(cr,uid,[('product_id','=',i)])
+                if not ids1 and not ids2 and not ids3 and not ids4 and not ids5:
+                    try:
+                        self.pool.get('product.product').unlink(cr,uid,[i])
+                        delete+=1
+                    except:
+                        _logger.error('Delete impossible')
+                        undelete+=1
+                else:
+                    self.pool.get('product.product').write(cr,uid,i,{'active':False})
+                    use+=1
+            _logger.info('Products deleted : %s'%(delete))
+            _logger.info('Products non deleted : %s'%(use))
+            _logger.info('product cleaned')
+            return True
+   
+    def clean_categ(self,cr,uid,ids,context=None):
+        _logger.info("Clean_categ")
+        product_categ=self.pool.get('product.category')
+        tab=[]
+        idss_cat=product_categ.search(cr,uid,[('code_categ_ingram','=','-1')])
+        idss_cat.sort(reverse=True)
+        for i in idss_cat:
+            id_child=product_categ.search(cr,uid,[('parent_id','=',i)])
+            for j in id_child :
+                if j in idss_cat and j not in tab:
+                    id_child2=product_categ.search(cr,uid,[('parent_id','=',j)])
+                    for z in id_child2:
+                        if z in idss_cat and z not in tab:
+                            tab.append(z)
+                    tab.append(j)
+            tab.append(i)
+        if 1==1:
+            for j in tab:
+                id_prod=self.pool.get('product.template').search(cr,uid,[('categ_id','=',j)])
+                id_cat=product_categ.search(cr,uid,[('id','in',tab),('parent_id','=',j)])
+                if not id_prod and not id_cat:
+                    try:
+                        product_categ.unlink(cr,uid,[j])
+                    except:pass
+        _logger.info("End Clean Categ")
+        return True
+   
+    def synchro_data(self,cr,uid,ids,context=None):
+        view = self.browse(cr,uid,ids)
+        name_config = view[0].name        
+        id_config = self.search(cr,uid,[('name','=',name_config),])
+        config = self.read(cr,uid,id_config,['server_address','server_login','server_passwd','chemin'])
+        val=self.browse(cr,uid,ids)[0].synchro_active
+        product_categ=self.pool.get('product.category')
+        if not val :
+            _logger.info('Products categories synchronization started')
+            result=self.synchro_categ(cr,uid,id_config,context)
+            if result==True:
+                _logger.info('products categories synchronization ended')
+            else:
+                _logger.info('products categories synchronization error')
+                return False
+            _logger.info('products synchronization started')
+            result3=self.synchronisation(cr,uid,id_config,context)
+            _logger.info(result3)
+            if result3==True:
+                _logger.info('products synchronization ended')
+            else:
+                _logger.info('products synchronization error')
+                return False
+            self.clean_categ(cr,uid,id_config,context)
+        try :
+            self.write(cr,uid,id_config,{'date_synchro' : time.strftime("%Y-%m-%d %H:%M:%S")})
+        except:
+            try :
+                self.write(cr,1,id_config,{'date_synchro' : time.strftime("%Y-%m-%d %H:%M:%S")})
+            except:pass
+        return True
+
+        
+    def synchronisation(self,cr,uid,id_config,context=None):  
+        config = self.read(cr,uid,id_config,['server_address','server_login','server_passwd','location_id','categorie_id','supplier_id','chemin','taxes_achats','taxes_ventes','file_prod'])
+        location = config[0]['location_id']
+        categ = config[0]['categorie_id']
+        supplier= config[0]['supplier_id']
+        chm=str(config[0]['chemin'])
+        file_prod=config[0]['file_prod']
+        listefich = os.listdir(chm+'/')
+        date=datetime.now()
+        product_product=self.pool.get('product.product')
+        product_categ=self.pool.get('product.category')
+        product_tmpl=self.pool.get('product.template')
+        if config[0]['taxes_achats']:
+            taxes_a=config[0]['taxes_achats']
+        else:
+            taxes_a=[]
+        if config[0]['taxes_ventes']:
+            taxes_v=config[0]['taxes_ventes']
+        else:
+            taxes_v=[]   
+        try:
+            compteur=0
+            for i in listefich:
+                if str(i)==str(file_prod):
+                    fichier = open(chm+'/'+i,'rb')
+                    fichiercsv = csv.reader(fichier, delimiter=',')
+                    for ligne in fichiercsv:
+                        if ligne[0] != "Ingram Part Number":
+                            i=0
+                            nom=ligne[13]
+                            name=''
+                            lgt=len(nom)
+                            
+                            while (i < lgt):
+                                try:
+                                    nom[i].decode('latin-1')
+                                    name +=nom[i]
+                                    i+=1
+                                except:
+                                    i+=1
+                            nom=name[0:127]
+                            desc=name
+                            _logger.info(compteur)
+                            empl = product_product.search(cr,uid,[('default_code','=',ligne[0]),])
+                            if empl:
+                                resultas =product_product.read(cr,uid,empl,['product_tmp'])
+                                idprod = resultas[0]['product_tmpl_id']
+                                categ_ingram=product_categ.search(cr,uid,[('code_categ_ingram','=',ligne[7])])
+                                if not categ_ingram:
+                                    categ_ingram=categ
+                                if ligne[8]=='X' or not ligne[8]:
+                                    ligne[8]='0.0'
+                                product_tmpl.write(cr,uid,[idprod],{'name':nom,'standard_price':float(ligne[8]),'weight_net':float(ligne[6]),'description':desc,
+                                                                    'categ_id':categ_ingram[0],'last_synchro_ingram':time.strftime("%Y-%m-%d %H:%M:%S")})
+                                suppinfo_id=product_tmpl.browse(cr,uid,idprod).seller_ids
+                                exist_line=False
+                                for b in suppinfo_id:
+                                    if b.name.id == supplier[0]:
+                                        exist=b.id
+                                        if not b.product_name or not b.product_code:
+                                            self.pool.get('product.supplierinfo').write(cr,uid,b.id,{'product_name':nom,'product_code':ligne[0]})
+                                        for c in b.pricelist_ids:
+                                            exist_line=True
+                                            if c.name=='INGRAM' and c.min_quantity==1:
+                                                self.pool.get('pricelist.partnerinfo').write(cr,uid,c.id,{'price':float(ligne[8])})
+                                if exist and exist_line==False:
+                                    self.pool.get('pricelist.partnerinfo').create(cr,uid,{'min_quantity':'1','price':float(ligne[8]),'suppinfo_id':exist,'name':'INGRAM'})
+                                if (len(ligne[2])==12):
+                                    ligne[2]="0"+ligne[2]
+                                if len(ligne[2]) == 13 :
+                                    product_product.write(cr,uid,empl,{'name_template':nom,'active':'TRUE','ean13':ligne[2],'vpn':ligne[1],'manufacturer':ligne[5],'active':True})
+                                else:
+                                    product_product.write(cr,uid,empl,{'name_template':nom,'active':'TRUE','vpn':ligne[1],'manufacturer':ligne[5],'active':True})
+                            else:
+                                    categ_ingram=product_categ.search(cr,uid,[('code_categ_ingram','=',ligne[7])])
+                                    if not categ_ingram:
+                                        categ_ingram=categ
+                                    if ligne[8]=='X' or not ligne[8]:
+                                        ligne[8]='0.0'
+                                    id=product_tmpl.create(cr,uid,{'name':nom,'standard_price':float(ligne[8]),'weight_net':float(ligne[6]),'description':desc,
+                                        'categ_id':categ_ingram[0],'procure_method':'make_to_order','ingram':True,'type':'product','last_synchro_ingram':time.strftime("%Y-%m-%d %H:%M:%S")})
+                                    if (len(ligne[2])==12):
+                                        ligne[2]="0"+ligne[2]
+                                    if len(ligne[2]) == 13 :
+                                        id_prod=product_product.create(cr,uid,{'default_code':ligne[0],'name_template':nom,'taxes_id': [(6,0,taxes_v)],'supplier_taxes_id': [(6,0,taxes_a)],
+                                                    'price_extra':0.00,'active':'TRUE','product_tmpl_id':id,'ean13':ligne[2],'vpn':ligne[1],'manufacturer':ligne[5]})
+                                    else:
+                                        id_prod=product_product.create(cr,uid,{'default_code':ligne[0],'name_template':nom,'taxes_id': [(6,0,taxes_v)],'supplier_taxes_id': [(6,0,taxes_a)],
+                                                    'price_extra':0.00,'active':'TRUE','product_tmpl_id':id,'vpn':ligne[1],'manufacturer':ligne[5]})
+                                        
+                                    r=self.pool.get('product.supplierinfo').create(cr,uid,{'name':supplier[0],'min_qty':0,'product_id':id_prod,'product_name':nom,'product_code':ligne[0],})
+                                    self.pool.get('pricelist.partnerinfo').create(cr,uid,{'min_quantity':'1','price':float(ligne[8]),'suppinfo_id':r,'name':'INGRAM'})
+                        compteur+=1
+                    fichier.close()
+            return True       
+        except:
+            _logger.error("Erreur Synchro_produit")
+            self.sendTextMail(cr,uid,id_config,"Error Synchronization","An error occured during the synchronization.\n \nDetails: \n\t %s" %(sys.exc_info()[0]))
+            return False                
+        
+    def download(self,cr,uid,id_config,pathsrc, pathdst,ftp):
+        idss=self.browse(cr,uid,id_config[0])
         try:
             lenpathsrc = len(pathsrc)
             l = ftp.nlst(pathsrc)
@@ -299,345 +565,81 @@ class ingram_config(models.Model):
             return True
         except:
             return False    
-
-    @api.one
-    def clean_data(self):
-        _logger.info("clean_data")
-        try:
-            product_product=self.env['product.product']
-            sale_order_line=self.env['sale.order.line']
-            purchase_order_line=self.env['purchase.order.line']
-            procurement_order=self.env['procurement.order']
-            stock_move=self.env['stock.move']
-            account_invoice_line=self.env['account.invoice.line']
-            aujourdhui = datetime.today()
-            semaine=timedelta(weeks=1)
-            date=aujourdhui - semaine
-            idProd=product_product.search(['|',('active','=',True),('active','=',False),('product_tmpl_id.ingram','=',True),('product_tmpl_id.last_synchro_ingram','<',date)],order='id')
-            delete=0
-            undelete=0
-            use=0
-            for i in idProd:
-                ids1=sale_order_line.search([('product_id','=',i.id)])
-                ids2=purchase_order_line.search([('product_id','=',i.id)])
-                ids3=procurement_order.search([('product_id','=',i.id)])
-                ids4=stock_move.search([('product_id','=',i.id)])
-                ids5=account_invoice_line.search([('product_id','=',i.id)])
-                if not ids1 and not ids2 and not ids3 and not ids4 and not ids5:
-                    try:
-                        i.unlink()
-                        delete+=1
-                    except:
-                        _logger.info('Delete impossible')
-                        undelete+=1
-                else:
-                    i.active = False
-                    use+=1
-            _logger.info('Products deleted : %s'%(delete))
-            _logger.info('Products non deleted : %s'%(use))
-            _logger.info('product cleaned')
-            return True
-        except:
-            _logger.error("Erreur Clean_data")
-            self.sendTextMail(self,"Error products cleaning","An error occured during the cleaning.\n\nDetails: \n\t %s" %(sys.exc_info()[0]))
-            return False
-    
-    @api.one
-    def delete_data(self):
-        _logger.info("delete_data")
-        try:
-            product_product=self.env['product.product']
-            sale_order_line=self.env['sale.order.line']
-            purchase_order_line=self.env['purchase.order.line']
-            procurement_order=self.env['procurement.order']
-            stock_move=self.env['stock.move']
-            account_invoice_line=self.env['account.invoice.line']
-            idProd=product_product.search(['|',('active','=',True),('active','=',False),('product_tmpl_id.ingram','=',True)],order='id')
-            delete=0
-            undelete=0
-            use=0
-            cpt=0
-            for i in idProd:
-                cpt+=1
-                ids1=sale_order_line.search([('product_id','=',i.id)])
-                ids2=purchase_order_line.search([('product_id','=',i.id)])
-                ids3=procurement_order.search([('product_id','=',i.id)])
-                ids4=stock_move.search([('product_id','=',i.id)])
-                ids5=account_invoice_line.search([('product_id','=',i.id)])
-                if not ids1 and not ids2 and not ids3 and not ids4 and not ids5:
-                    try:
-                        i.unlink()
-                        delete+=1
-                    except:
-                        _logger.info('Delete impossible')
-                        undelete+=1
-                else:
-                    i.active = False
-                    use+=1
-            _logger.info('Products deleted : %s'%(delete))
-            _logger.info('Products non deleted : %s'%(use))
-            _logger.info('product cleaned')
-            return True
-        except:
-            _logger.error("Erreur delete_data")
-            self.sendTextMail(self,"Error products deleting","An error occured during the cleaning.\n\nDetails: \n\t %s" %(sys.exc_info()[0]))
-            return False
-    
-    @api.one
-    def synchro_data(self):
-        config_id=self   
-        _logger.info(_('Products categories synchronization started'))
-        result=self.synchro_categ(config_id)
-        if result[0]==True:
-            _logger.info(_('products categories synchronization ended'))
-        else:
-            _logger.info(('products categories synchronization error'))
-            return False
-        _logger.info(_('products synchronization started'))
-        result3=self.synchronisation(config_id)
-        _logger.info(result3)
-        if result3[0]==True:
-            _logger.info(_('products synchronization ended'))
-        else:
-            _logger.info(_('products synchronization error'))
-            return False
-        self.clean_categ()
-        try :
-            self.date_synchro = time.strftime("%Y-%m-%d %H:%M:%S")
-        except:
-            try :
-                self.date_synchro = time.strftime("%Y-%m-%d %H:%M:%S")
-            except:pass
+   
+    def product_qty(self, cr, uid, ids,qty,prod_id,location,context=None):
+        date = time.strftime("%Y-%m-%d %H:%M:%S")
+        listid = self.pool.get('stock.inventory').search(cr,uid,[('name','=','INV Ingram'+str(time.strftime("%Y-%m-%d")))])
+        if (listid):
+            id_Inv=listid[0]
+        else:            
+            id_Inv=self.pool.get('stock.inventory').create(cr,uid,{'state':'draft','name':'INV Ingram'+str(time.strftime("%Y-%m-%d")),'date_done':date,'write_date':date})
+        self.pool.get('stock.inventory.line').create(cr,uid,{'compagny_id':1,'inventory_id':int(id_Inv),'product_qty':qty,'location_id':location,'product_id': int(prod_id),'product_uom' : 1})
         return True
     
-    @api.one    
-    def clean_categ(self):
-        _logger.info("Clean_categ")
-        product_categ=self.env['product.category']
-        product_tmpl=self.env['product.template']
-        tab=[]
-        idss_cat=product_categ.search([('code_categ_ingram','=','-1')])
-        for i in idss_cat:
-            id_child=product_categ.search([('parent_id','=',i.id)])
-            for j in id_child :
-                if j in idss_cat and j.id not in tab:
-                    id_child2=product_categ.search([('parent_id','=',j.id)])
-                    for z in id_child2:
-                        if z in idss_cat and z.id not in tab:
-                            tab.append(z.id)
-                    tab.append(j.id)
-            tab.append(i.id)
-        if 1==1:
-            for j in tab:
-                id_prod=product_tmpl.search([('categ_id','=',j)])
-                id_cat=product_categ.search([('id','in',tab),('parent_id','=',j)])
-                if not id_prod and not id_cat:
-                    try:
-                        k=product_categ.browse(j)
-                        k.unlink()
-                    except:pass
-        _logger.info("End Clean Categ")
-        return True
-    
-    @api.one
-    def synchronisation(self,config_id):  
-        categ = config_id.categorie_id
-        supplier= config_id.supplier_id
-        chm=str(config_id.chemin)
-        file_prod=config_id.file_prod
+    def synchro_categ(self,cr,uid,id_config,context=None):
+        config = self.read(cr,uid,id_config,['server_address','server_login','server_passwd','location_id','categorie_id','supplier_id','chemin','file_cat'])
+        categ = config[0]['categorie_id']
+        categ = categ[0]
+        file_cat=config[0]['file_cat']
+        chm=str(config[0]['chemin'])
         listefich = os.listdir(chm+'/')
-        product_product=self.env['product.product']
-        product_categ=self.env['product.category']
-        product_tmpl=self.env['product.template']
-        pricelist_supplier=self.env['pricelist.partnerinfo']
-        product_supplier=self.env['product.supplierinfo']
-        product_routes=self.env['stock.location.route']
-        taxes_a=[]
-        taxes_v=[]  
-        for a in config_id.taxes_achats:
-            taxes_a.append(a.id)
-        for a in config_id.taxes_ventes:
-            taxes_v.append(a.id)
-        try:
-            compteur=0
-            for i in listefich:
-                if str(i)==str(file_prod):
-                    fichier = open(chm+i,'rb')
-                    fichiercsv = csv.reader(fichier, delimiter=',',quotechar='|')
-                    for ligne in fichiercsv:
-                        if ligne[0] != "Ingram Part Number":
-                            i=0
-                            nom=ligne[13]
-                            name=''
-                            lgt=len(nom)
-                            while (i < lgt):
-                                try:
-                                    nom[i].decode('latin-1')
-                                    name +=nom[i]
-                                    i+=1
-                                except:
-                                    i+=1
-                            nom=name[0:127]
-                            desc=name
-                            print "n:",compteur
-                            _logger.info(compteur)
-                            empl = product_product.search([('default_code','=',ligne[0])])
-                            if empl:
-                                idprod = empl.product_tmpl_id
-                                categ_ingram=product_categ.search([('code_categ_ingram','=',ligne[7])])
-                                if not categ_ingram:
-                                    categ_ingram=categ
-                                elif len(categ_ingram)>1:
-                                    categ_ingram=categ_ingram[0]
-                                if ligne[8]=='X' or not ligne[8]:
-                                    ligne[8]='0.0'
-                                idprod.name =nom
-                                idprod.standard_price = float(ligne[8])
-                                idprod.weight_net = float(ligne[6])
-                                idprod.description = desc
-                                idprod.valuation = 'real_time'
-                                idprod.description_sale = desc
-                                idprod.categ_id = categ_ingram.id
-                                idprod.last_synchro_ingram = time.strftime("%Y-%m-%d")
-                                suppinfo_id=idprod.seller_ids
-                                exist_line=False
-                                exist=False
-                                for b in suppinfo_id:
-                                    if b.name.id == supplier.id:
-                                        exist=b.id
-                                        if not b.product_name or not b.product_code:
-                                            b.product_name = nom
-                                            b.product_code = ligne[0]
-                                        for c in b.pricelist_ids:
-                                            exist_line=True
-                                            if c.name=='INGRAM' and c.min_quantity==1:
-                                                c.price = float(ligne[8])
-                                if exist and exist_line==False:
-                                    pricelist_supplier.create({'min_quantity':'1','price':float(ligne[8]),'suppinfo_id':exist,'name':'INGRAM'})
-                                if (len(ligne[2])==12):
-                                    ligne[2]="0"+ligne[2]
-                                if len(ligne[2]) == 13 :
-                                    empl.name_template = nom
-                                    empl.active = True
-                                    empl.ean13 = ligne[2]
-                                    empl.vpn = ligne[1]
-                                    empl.manufacturer = ligne[5]
-                                else:
-                                    empl.name_template = nom
-                                    empl.active = True
-                                    empl.vpn = ligne[1]
-                                    empl.manufacturer = ligne[5]
-                            else:
-                                categ_ingram=product_categ.search([('code_categ_ingram','=',ligne[7])])
-                                if not categ_ingram:
-                                    categ_ingram=categ
-                                elif len(categ_ingram)>1:
-                                    categ_ingram=categ_ingram[0]
-                                if ligne[8]=='X' or not ligne[8]:
-                                    ligne[8]='0.0'
-                                mto_ids=product_routes.search(['|',('name','=','Make To Order'),('name','=','Buy')])
-                                route=[]
-                                for d in mto_ids:
-                                    route.append(d.id)
-                                tmpl_id=product_tmpl.create({'valuation':'real_time','name':nom,'standard_price':float(ligne[8]),'weight_net':float(ligne[6]),'description':desc,'description_sale':desc,
-                                    'categ_id':categ_ingram.id,'route_ids':[(6,0,route)],'ingram':True,'type':'product','last_synchro_ingram':time.strftime("%Y-%m-%d")})
-                                id_prod=product_product.search([('product_tmpl_id','=',tmpl_id.id)])
-                                if (len(ligne[2])==12):
-                                    ligne[2]="0"+ligne[2]
-                                if len(ligne[2]) == 13 :
-                                    id_prod.default_code = ligne[0]
-                                    id_prod.name_template = nom
-                                    id_prod.taxes_id = [(6,0,taxes_v)]
-                                    id_prod.supplier_taxes_id = [(6,0,taxes_a)]
-                                    id_prod.price_extra = 0.00
-                                    id_prod.active = True
-                                    id_prod.product_tmpl_id = tmpl_id.id
-                                    id_prod.ean13 = ligne[2]
-                                    id_prod.vpn = ligne[1]
-                                    id_prod.manufacturer = ligne[5]
-                                else:
-                                    id_prod.default_code = ligne[0]
-                                    id_prod.name_template = nom
-                                    id_prod.taxes_id = [(6,0,taxes_v)]
-                                    id_prod.supplier_taxes_id = [(6,0,taxes_a)]
-                                    id_prod.price_extra = 0.00
-                                    id_prod.active = True
-                                    id_prod.product_tmpl_id = tmpl_id.id
-                                    id_prod.vpn = ligne[1]
-                                    id_prod.manufacturer = ligne[5]
-                                supp_info=product_supplier.create({'name':supplier.id,'min_qty':0,'product_tmpl_id':tmpl_id.id,'product_name':nom,'product_code':ligne[0]})
-                                pricelist_supplier.create({'min_quantity':'1','price':float(ligne[8]),'suppinfo_id':supp_info.id,'name':'INGRAM'})
-                        compteur+=1
-                    fichier.close()
-            return True       
-        except:
-            _logger.error("Erreur Synchro_produit")
-            self.sendTextMail(config_id,"Error Synchronization","An error occured during the synchronization.\n \nDetails: \n\t %s" %(sys.exc_info()[0]))
-            return False   
-        
-    @api.one
-    def synchro_categ(self,config_id):
-        categ = config_id.categorie_id
-        file_cat = config_id.file_cat
-        chm=str(config_id.chemin)
-        listefich = os.listdir(chm+'/')
-        product_categ=self.env['product.category']
+        product_categ=self.pool.get('product.category')
         compteur=0
         for i in listefich:
-            if str(i)==str(file_cat) :
-                fichier = open(chm+'/'+i,'rb')
-                fichiercsv = csv.reader(fichier, delimiter=';')
-                cat=[]
-                for ligne in fichiercsv:
-                    ligne_un=product_categ.search([('code_categ_ingram','=',ligne[1]),('name','=',ligne[2])])
-                    if ligne_un:
-                        ligne_trois=product_categ.search([('code_categ_ingram','=',ligne[3]),('name','=',ligne[4]),('parent_id','=',ligne_un.id)])
-                    else:
-                        ligne_trois=product_categ.search([('code_categ_ingram','=',ligne[3]),('name','=',ligne[4])])
-                    if ligne_trois:
-                        ligne_cinq=product_categ.search([('code_categ_ingram','=',ligne[5]),('name','=',ligne[6]),('parent_id','=',ligne_trois.id)])
-                    else:
-                        ligne_cinq=product_categ.search([('code_categ_ingram','=',ligne[5]),('name','=',ligne[6])])
-                    _logger.info(compteur)
-                    if not ligne_un:
-                        ligne_un=product_categ.create({'name':ligne[2],'parent_id':categ.id,'code_categ_ingram':ligne[1],'type':'view'})
-                        if ligne_un not in cat:
-                            cat.append(ligne_un)
-                    else:
-                        ligne_un.code_categ_ingram = ligne[1]
-                        if ligne_un not in cat:
-                            cat.append(ligne_un)
-                    if not ligne_trois :
-                        ligne_trois=product_categ.create({'name':ligne[4],'parent_id':ligne_un.id,'code_categ_ingram':ligne[3],'type':'view'})
-                        if ligne_trois not in cat:
-                            cat.append(ligne_trois)
-                    else:
-                        if ligne_trois.parent_id != ligne_un:
-                            ligne_trois.parent_id = ligne_un.id
-                            ligne_trois.code_categ_ingram = ligne[3]
+                if str(i)==str(file_cat) :
+                    fichier = open(chm+'/'+i,'rb')
+                    fichiercsv = csv.reader(fichier, delimiter=';')
+                    cat=[]
+                    for ligne in fichiercsv:
+                        ligne_un=product_categ.search(cr,uid,[('code_categ_ingram','=',ligne[1]),('name','=',ligne[2])])
+                        if ligne_un:
+                            ligne_trois=product_categ.search(cr,uid,[('code_categ_ingram','=',ligne[3]),('name','=',ligne[4]),('parent_id','=',ligne_un[0])])
                         else:
-                            ligne_trois.code_categ_ingram = ligne[3]
-                        if ligne_trois not in cat:
-                            cat.append(ligne_trois)
-                    if not ligne_cinq :
-                        ligne_cinq = product_categ.create({'name':ligne[6],'parent_id':ligne_trois.id,'code_categ_ingram':ligne[5]})
-                        if ligne_cinq not in cat:
-                            cat.append(ligne_cinq)
-                    else:
-                        if ligne_cinq.parent_id != ligne_trois:
-                            ligne_cinq.parent_id = ligne_trois.id
-                            ligne_cinq.code_categ_ingram = ligne[5]
+                            ligne_trois=product_categ.search(cr,uid,[('code_categ_ingram','=',ligne[3]),('name','=',ligne[4])])
+                        if ligne_trois:
+                            ligne_cinq=product_categ.search(cr,uid,[('code_categ_ingram','=',ligne[5]),('name','=',ligne[6]),('parent_id','=',ligne_trois[0])])
                         else:
-                            ligne_cinq.code_categ_ingram = ligne[5]
-                        if ligne_cinq not in cat:
-                            cat.append(ligne_cinq[0])
-                    compteur+=1
-                fichier.close()
-                idss=product_categ.search([('code_categ_ingram','!=',False)])
-                tab=[]
-                for i in idss:
-                    if i not in cat:
-                        tab.append(i)
-                        i.code_categ_ingram = '-1'
+                            ligne_cinq=product_categ.search(cr,uid,[('code_categ_ingram','=',ligne[5]),('name','=',ligne[6])])
+                        _logger.info(compteur)
+                        if not ligne_un:
+                            ligne_un=product_categ.create(cr,uid,{'name':ligne[2],'parent_id':categ,'code_categ_ingram':ligne[1],'type':'view'})
+                            if ligne_un not in cat:
+                                cat.append(ligne_un)
+                        else:
+                            ligne_un=ligne_un[0]
+                            product_categ.write(cr,uid,ligne_un,{'code_categ_ingram':ligne[1]})
+                            if ligne_un not in cat:
+                                cat.append(ligne_un)
+                        if not ligne_trois :
+                            ligne_trois=product_categ.create(cr,uid,{'name':ligne[4],'parent_id':ligne_un,'code_categ_ingram':ligne[3],'type':'view'})
+                            if ligne_trois not in cat:
+                                cat.append(ligne_trois)
+                        else:
+                            if product_categ.browse(cr,uid,ligne_trois[0]).parent_id.id != ligne_un:
+                                product_categ.write(cr,uid,ligne_trois[0],{'parent_id':ligne_un,'code_categ_ingram':ligne[3]})
+                            else:
+                                product_categ.write(cr,uid,ligne_trois[0],{'code_categ_ingram':ligne[3]})
+                            ligne_trois=ligne_trois[0]
+                            if ligne_trois not in cat:
+                                cat.append(ligne_trois)
+                        if not ligne_cinq :
+                            ligne_cinq = product_categ.create(cr,uid,{'name':ligne[6],'parent_id':ligne_trois,'code_categ_ingram':ligne[5]})
+                            if ligne_cinq not in cat:
+                                cat.append(ligne_cinq)
+                        else:
+                            if product_categ.browse(cr,uid,ligne_cinq[0]).parent_id.id != ligne_trois:
+                                product_categ.write(cr,uid,ligne_cinq[0],{'parent_id':ligne_trois,'code_categ_ingram':ligne[5]})
+                            else:
+                                product_categ.write(cr,uid,ligne_cinq[0],{'code_categ_ingram':ligne[5]})
+                            if ligne_cinq not in cat:
+                                cat.append(ligne_cinq[0])
+                        compteur+=1
+                    fichier.close()
+                    idss=product_categ.search(cr,uid,[('code_categ_ingram','!=',False)])
+                    tab=[]
+                    for i in idss:
+                        if i not in cat:
+                            tab.append(i)
+                            product_categ.write(cr,uid,i,{'code_categ_ingram':'-1'})
         return True
 ingram_config()

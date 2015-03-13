@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--  <menuitem id="menu_view_car_marque_form" parent="hr.menu_hr_management" name="Marque" sequence="1" />
+        <menuitem id="menu_view_car_modele_form" parent="hr.menu_hr_management" name="Modele" sequence="1" />
+        -->
+        <menuitem id="menu_hr_car_management" name="Véhicules" parent="hr.menu_hr_configuration" sequence="1" groups="base.group_system" />
+        
+        <!--
+        ==========
+        Car Society
+        ==========
+        -->
+        <record id="view_car_marque_form" model="ir.ui.view">
+        	<field name="name">hr.car.marque.form</field>
+            <field name="model">hr.car.marque</field> 
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Marques" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+            	</form>
+        	</field>
+        </record>
+        
+        <record id="view_car_marque_tree" model="ir.ui.view">
+            <field name="name">hr.car.marque.tree</field>
+            <field name="model">hr.car.marque</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Marques">
+                	<field name="name"/>
+                </tree>
+            </field>
+        </record>
+         
+        <record id="view_car_modele_tree" model="ir.ui.view">
+            <field name="name">hr.car.modele.tree</field>
+            <field name="model">hr.car.modele</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Modeles">
+                	<field name="name"/>
+                	
+                </tree>
+             </field>
+        </record>
+         
+        <record id="view_car_modele_form" model="ir.ui.view">
+        	<field name="name">hr.car.modele.form</field>
+            <field name="model">hr.car.modele</field> 
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Modeles" version="7.0">
+                    <sheet>
+                        <group>
+        			        <field name="name"/>
+        			        <field name="marque_id"/>
+        			    </group>
+        			</sheet>
+        		</form>
+        	</field>
+        </record>
+        
+        <record id="open_view_car_marque_list" model="ir.actions.act_window">
+            <field name="name">Marques de voitures</field>
+            <field name="res_model">hr.car.marque</field> 
+            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <record id="open_view_car_modele_list" model="ir.actions.act_window">
+            <field name="name">Modèles de voitures</field>
+            <field name="res_model">hr.car.modele</field> 
+            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="view_car_form" model="ir.ui.view">
+            <field name="name">hr.car.form</field>
+            <field name="model">hr.car</field> 
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Voiture" version="7.0">
+                    <sheet>
+                        <group>
+		                    <field name="employee_id"/>
+		                    <notebook colspan="6">
+		                        <page string="Véhicules">
+		                            <group>
+		                                <field name="marque"/>
+		                                <field name="num_chassis"/>
+		                                <field name="modele" domain="[('marque_id', '=' , marque)]"/> 	
+		                                <field name="couleur"/>
+		                                <field name="immatriculation"/>
+		                                <field name="carburant" />
+		                                <field name="moteur"/>                               
+		                                <field name="fournisseur_id" domain="[('supplier','=',True)]"/>
+		                                <field name="leasing_id" domain="[('supplier','=',True)]"/>
+		                                <field name="co2"/>
+		                                <field name="name" invisible="1"/>
+		                            </group>
+		                        </page>
+		                        <page string="Entretiens et maintenance">
+		                        <field colspan="4" name="entretien_id" nolabel="1">
+		                                <tree editable="top" string="Entretiens">
+		                                    <field name="garage_id" domain="[('supplier','=',True)]"/>
+		                            		<field name="km"/>
+		                         			<field name="remarque"/>                		 	
+		                         			<field name="date_entretien"/> 	
+		                                </tree>
+		                                <form string="Entretiens">
+		                                    <field name="garage_id" domain="[('supplier','=',True)]"/>
+		                            		<field name="km"/>
+		                         			<field name="remarque"/>                         		 
+		                         			<field name="date_entretien"/>
+		                                </form>
+		                            </field>
+		                        </page>
+		                        <page string="Assurance">
+		                            <group>
+		                                <field name="courtier_id" domain="[('supplier','=',True)]"/>
+		                                <field name="compagnie"/>
+		                                <field name="num_contrat"/>
+		                                <field name="term_insurance"/>                            
+		                            </group>
+		                        </page>
+		                    </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+		<record id="view_car_tree" model="ir.ui.view">
+            <field name="name">hr.car.tree</field>
+            <field name="model">hr.car</field>  
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Voitures">
+                    <field name="marque"/>
+                    <field name="modele"/>
+                    <field name="immatriculation"/>
+                    <field name="employee_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="open_view_car_list_my" model="ir.actions.act_window">
+            <field name="name">Voitures</field>
+            <field name="res_model">hr.car</field> 
+            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="view_car_tree"/>
+        </record>
+        <menuitem action="open_view_car_list_my" id="menu_open_view_car_list_my" sequence="3" parent="hr.menu_hr_main" />
+        <menuitem action="open_view_car_marque_list" id="menu_view_car_marque_form" sequence="3" parent="menu_hr_car_management"/>
+        <menuitem action="open_view_car_modele_list" id="menu_view_car_modele_form" sequence="3" parent="menu_hr_car_management"/>
+        
+        
+        <!--
+        ============================
+        Car Society in Employee Form
+        ============================
+        -->
+          
+        <record id="hr_hr_employee_view_form2" model="ir.ui.view">
+        	<field name="name">hr.hr.employee.view.form2</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/> 
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            		<field name="vehicle" position="replace">
+            		 	<field name="vehicle_id"/>  
+            		</field>            		          
+        	</field>
+        </record>
+    </data>
+</openerp>

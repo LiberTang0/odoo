@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>   
+        <record id="edit_holiday_new_inh" model="ir.ui.view">
+            <field name="name">Leave Request</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="arch" type="xml">
+                    <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_user" position="replace">
+                        <button string="Reset to New" name="set_to_draft" states="refuse,confirm,validate,validate1" type="object" groups="base.group_user" />
+                    </button>
+            </field>
+        </record>
+   </data>
+</openerp>

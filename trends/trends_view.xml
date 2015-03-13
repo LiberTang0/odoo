@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem name="Trends"
+            id="menu_trends_root"
+            groups="group_trends_user,group_trends_admin"
+            sequence="60"/>
+     <menuitem id="menu_trends_using" sequence="50" parent="menu_trends_root" name="Research" groups="group_trends_user,group_trends_admin"/>         
+     <menuitem id="menu_trends_config" sequence="100" parent="menu_trends_root" name="Configuration" groups="group_trends_admin"/>          
+<!-- configuration for trends -->  
+
+    <record model="ir.ui.view" id="trends_config_tree_view">
+        <field name="name">trends.config.tree</field>
+        <field name="model">trends.config</field>
+        <field name="arch" type="xml">
+            <tree string="Trends Configuration">
+                <field name="name"/>  
+                <field name="api_key"/> 
+                <field name="language"/> 
+                <field name="url"/> 
+                <field name="type"/>        
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="trends_config_form_view">
+        <field name="name">trends.config.form</field>
+        <field name="model">trends.config</field>
+        <field name="arch" type="xml">
+            <form string="Trends Configuration" version="7.0">
+                <header>
+                    <button name="action_load_sectorlist" string="Load Sector List" type="object" icon="gtk-execute"/>         
+                    <button name="action_load_nacebellist" string="Load Nacebel List" type="object" icon="gtk-execute"/>      
+                    <button name="action_load_figurelist" string="Load Figure List" type="object" icon="gtk-execute"/>      
+                    <button name="action_load_functionlist" string="Load Function List" type="object" icon="gtk-execute"/>   
+                    <button name="action_update_credit" string="Refresh your credit" type="object" icon="gtk-execute"/>                                                                                      
+                </header>                
+              <sheet>
+                <group>
+                <field name="name"/>  
+                <field name="pwd" password="1"/> 
+                <field name="user_id" required="1"/>   
+                <field name="credit" readonly="1"/>
+                <field name="save"/>               
+                <field name="api_key"/> 
+                <field name="language"/> 
+                <field name="url"/> 
+                <field name="type"/> 
+                <field name="states"/>                 
+                </group>
+              </sheet>
+            </form>
+         </field>
+     </record>
+     
+     <record id="open_view_trends_config" model="ir.actions.act_window">
+         <field name="name">Trends Configuration</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">trends.config</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+             Click to add a new trends configuration
+           </p>
+         </field>
+     </record>
+     <menuitem action="open_view_trends_config" id="menu_open_view_trends_config" sequence="2" parent="menu_trends_config" string="Trends Configuration"/>  
+     
+   
+<!-- Sectore list  -->
+
+        <record id="view_trends_sectorlist_filter" model="ir.ui.view">
+            <field name="name">trends.sectorlist.select</field>
+            <field name="model">trends.sectorlist</field>
+            <field name="arch" type="xml">
+                <search string="Search Trends Sector List">
+                    <field name="code" string="Code Sector" filter_domain="[('code','like',self)]"/>
+                    <field name="name" string="Name" filter_domain="[('name','like',self)]"/>
+                    <field name="description_long" string="Description" filter_domain="[('description_long','like',self)]"/>                                                         
+               </search>
+            </field>
+        </record>
+
+
+    <record model="ir.ui.view" id="trends_sectorlist_tree_view">
+        <field name="name">trends.sectorlist.tree</field>
+        <field name="model">trends.sectorlist</field>
+        <field name="arch" type="xml">
+            <tree string="Trends Sector List">
+                <field name="code"/>                  
+                <field name="name"/>  
+                <field name="description_long"/> 
+      
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="trends_sectorlist_form_view">
+        <field name="name">trends.sectorlist.form</field>
+        <field name="model">trends.sectorlist</field>
+        <field name="arch" type="xml">
+            <form string="Trends Sector List" version="7.0">              
+              <sheet>
+                <group>
+                <field name="code"/>                     
+                <field name="name"/>  
+                <field name="description_long"/> 
+
+                </group>
+              </sheet>
+            </form>
+         </field>
+     </record>
+     
+     <record id="open_view_trends_sectorlist" model="ir.actions.act_window">
+         <field name="name">Trends Sector List</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">trends.sectorlist</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+             Click to add a new trends sector list
+           </p>
+         </field>
+         <field name="search_view_id" ref="view_trends_sectorlist_filter"/>
+         
+     </record>
+     <menuitem action="open_view_trends_sectorlist" id="menu_open_view_trends_sectorlist" sequence="2" parent="menu_trends_config" string="Trends Sector List"/>   
+     
+<!-- Nacebel list  -->
+
+        <record id="view_trends_nacebellist_filter" model="ir.ui.view">
+            <field name="name">trends.nacebellist.select</field>
+            <field name="model">trends.nacebellist</field>
+            <field name="arch" type="xml">
+                <search string="Search Trends Nacebel List">
+                    <field name="code" string="Code Sector" filter_domain="[('code','like',self)]"/>
+                    <field name="name" string="Name" filter_domain="[('name','like',self)]"/>                                                      
+               </search>
+            </field>
+        </record>
+
+    <record model="ir.ui.view" id="trends_nacebellist_tree_view">
+        <field name="name">trends.nacebellist.tree</field>
+        <field name="model">trends.nacebellist</field>
+        <field name="arch" type="xml">
+            <tree string="Trends Nacebel List">
+                <field name="code"/>                  
+                <field name="name"/>        
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="trends_nacebellist_form_view">
+        <field name="name">trends.nacebellist.form</field>
+        <field name="model">trends.nacebellist</field>
+        <field name="arch" type="xml">
+            <form string="Trends Nacebel List" version="7.0">              
+              <sheet>
+                <group>
+                <field name="code"/>                     
+                <field name="name"/>  
+                </group>
+              </sheet>
+            </form>
+         </field>
+     </record>
+     
+     <record id="open_view_trends_nacebellist" model="ir.actions.act_window">
+         <field name="name">Trends Nacebel List</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">trends.nacebellist</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+             Click to add a new trends nacebel list
+           </p>
+         </field>
+         <field name="search_view_id" ref="view_trends_nacebellist_filter"/>         
+     </record>
+     <menuitem action="open_view_trends_nacebellist" id="menu_open_view_trends_nacebellist" sequence="2" parent="menu_trends_config" string="Trends Nacebel List"/>  
+     
+     <!-- Figure List -->
+     
+        <record id="view_trends_figurelist_filter" model="ir.ui.view">
+            <field name="name">trends.figurelist.select</field>
+            <field name="model">trends.figurelist</field>
+            <field name="arch" type="xml">
+                <search string="Search Trends Figure List">
+                    <field name="code" string="Code Sector" filter_domain="[('code','like',self)]"/>
+                    <field name="name" string="Name" filter_domain="[('name','like',self)]"/>                                                      
+               </search>
+            </field>
+        </record>     
+     
+    <record model="ir.ui.view" id="trends_figurelist_tree_view">
+        <field name="name">trends.figurelist.tree</field>
+        <field name="model">trends.figurelist</field>
+        <field name="arch" type="xml">
+            <tree string="Trends Figure List">
+                <field name="code"/>                  
+                <field name="name"/>        
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="trends_figurelist_form_view">
+        <field name="name">trends.figurelist.form</field>
+        <field name="model">trends.figurelist</field>
+        <field name="arch" type="xml">
+            <form string="Trends Figure List" version="7.0">              
+              <sheet>
+                <group>
+                <field name="code"/>                     
+                <field name="name"/>  
+                </group>
+              </sheet>
+            </form>
+         </field>
+     </record>
+     
+     <record id="open_view_trends_figurelist" model="ir.actions.act_window">
+         <field name="name">Trends Figure List</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">trends.figurelist</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+             Click to add a new trends figure list
+           </p>
+         </field>
+         <field name="search_view_id" ref="view_trends_figurelist_filter"/>             
+     </record>
+     <menuitem action="open_view_trends_figurelist" id="menu_open_view_trends_figurelist" sequence="2" parent="menu_trends_config" string="Trends Figure List"/>     
+  
+     <!-- Function List -->
+    <record id="view_trends_functionlist_filter" model="ir.ui.view">
+        <field name="name">trends.functionlist.select</field>
+        <field name="model">trends.functionlist</field>
+        <field name="arch" type="xml">
+            <search string="Search Trends Function List">
+                <field name="code" string="Code Sector" filter_domain="[('code','like',self)]"/>
+                <field name="name" string="Name" filter_domain="[('name','like',self)]"/>                                                      
+           </search>
+        </field>
+    </record>        
+     
+    <record model="ir.ui.view" id="trends_functionlist_tree_view">
+        <field name="name">trends.functionlist.tree</field>
+        <field name="model">trends.functionlist</field>
+        <field name="arch" type="xml">
+            <tree string="Trends Function List">
+                <field name="code"/>                  
+                <field name="name"/>        
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="trends_functionlist_form_view">
+        <field name="name">trends.functionlist.form</field>
+        <field name="model">trends.functionlist</field>
+        <field name="arch" type="xml">
+            <form string="Trends Function List" version="7.0">              
+              <sheet>
+                <group>
+                <field name="code"/>                     
+                <field name="name"/>  
+                </group>
+              </sheet>
+            </form>
+         </field>
+     </record>
+     
+     <record id="open_view_trends_functionlist" model="ir.actions.act_window">
+         <field name="name">Trends Function List</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">trends.functionlist</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+             Click to add a new trends function list
+           </p>
+         </field>
+         <field name="search_view_id" ref="view_trends_functionlist_filter"/>             
+     </record>
+     <menuitem action="open_view_trends_functionlist" id="menu_open_view_trends_functionlist" sequence="2" parent="menu_trends_config" string="Trends Function List"/>       
+     
+     
+     <!-- Type List -->
+    <record id="view_trends_type_list_filter" model="ir.ui.view">
+        <field name="name">trends.type.list.select</field>
+        <field name="model">trends.type.list</field>
+        <field name="arch" type="xml">
+            <search string="Search Trends Type List">
+                <field name="name" string="Name" filter_domain="[('name','like',self)]"/>                                                      
+           </search>
+        </field>
+    </record>        
+     
+    <record model="ir.ui.view" id="trends_type_list_tree_view">
+        <field name="name">trends.type.list.tree</field>
+        <field name="model">trends.type.list</field>
+        <field name="arch" type="xml">
+            <tree string="Trends Type List">                 
+                <field name="name"/>        
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="trends_type_list_form_view">
+        <field name="name">trends.type.list.form</field>
+        <field name="model">trends.type.list</field>
+        <field name="arch" type="xml">
+            <form string="Trends Function List" version="7.0">              
+              <sheet>
+                <group>                   
+                <field name="name"/>  
+                </group>
+              </sheet>
+            </form>
+         </field>
+     </record>
+     
+     <record id="open_view_trends_type_list" model="ir.actions.act_window">
+         <field name="name">Trends Type List</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">trends.type.list</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+             Click to add a new trends type
+           </p>
+         </field>
+         <field name="search_view_id" ref="view_trends_type_list_filter"/>             
+     </record>
+     <menuitem action="open_view_trends_type_list" id="menu_open_view_trends_type_list" sequence="2" parent="menu_trends_config" string="Trends Type List"/>       
+          
+     
+<!-- create a research for trends -->  
+<!--   
+    <record model="ir.ui.view" id="trends_search_tree_view">
+        <field name="name">trends.search.tree</field>
+        <field name="model">trends.search</field>
+        <field name="arch" type="xml">
+            <tree string="Trends Research">
+                <field name="name"/>  
+                <field name="search_type"/>     
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="trends_search_form_view">
+        <field name="name">trends.search.form</field>
+        <field name="model">trends.search</field>
+        <field name="arch" type="xml">
+            <form string="Trends Research" version="7.0">
+                <header>
+                    <button name="action_search_trends" string="Run Search" type="object" icon="gtk-execute"/>         
+                </header>
+              <sheet>
+                <field name="name"/>  
+                <group>
+                    <field name="configuration"/>                    
+	                <field name="search_type"/>
+	                <field name="who" attrs="{'required':[('search_type','=','who')], 'invisible':[('search_type','!=','who')]}"/> 
+	                <field name="where" attrs="{'invisible':[('search_type','!=','who')]}"/> 
+	                <field name="vat" attrs="{'required':[('search_type','=','vat')], 'invisible':[('search_type','!=','vat')]}"/> 
+	                <field name="vat_type" attrs="{'required':[('search_type','=','vat')], 'invisible':[('search_type','!=','vat')]}"/>
+                </group>                 
+                <notebook>
+                    <page string="General">
+	                 <field name="res_who" widget="one2many">
+	                     <form>
+	                        <field name="name"/>
+	                        <field name="city"/>
+	                        <field name="zip"/>
+	                        <field name="sectore_code"/>
+                            <field name="sectore"/>	                        
+	                        <field name="vat"/>
+	                     </form>
+	                     <tree>
+	                        <field name="name"/>
+	                        <field name="city"/>
+	                        <field name="zip"/>
+	                        <field name="sectore_code"/>
+	                        <field name="vat"/>
+                            <button name="action_create_lead" string="Create Lead" type="object" icon="gtk-execute"/> 	                        
+	                     </tree>    
+	                </field>  
+	                </page>
+                    <page string="Management">	                
+	                 <field name="res_tva_management" widget="one2many">
+	                     <form>
+	                        <field name="gender"/>  
+	                        <field name="last_name"/>
+	                        <field name="name"/>
+	                        <field name="language_code"/>
+	                        <field name="function_code"/>
+	                        <field name="function"/>
+	                        <field name="email"/>
+	                     </form>
+	                     <tree>
+	                        <field name="gender"/>  
+	                        <field name="last_name"/>
+	                        <field name="name"/>
+	                        <field name="language_code"/>
+	                        <field name="function_code"/>
+	                        <field name="function"/>
+	                        <field name="email"/>
+	                     </tree>    
+	                </field>    
+	                </page>
+                    <page string="Empty">	                
+	                 <field name="res_tva_empty" widget="one2many">
+	                     <form>
+	                        <field name="official_name"/>    
+	                        <field name="name"/>  
+	                        <field name="company_number"/> 
+	                        <field name="postal_code"/>                                                                                          
+	                        <field name="city"/>  
+	                        <field name="street"/>
+	                        <field name="house_number"/>
+	                        <field name="house_number_suffix"/>                        
+	                        <field name="email"/>
+	                        <field name="telephone"/>                          
+	                        <field name="fax"/>
+	                        <field name="website"/>  
+	                        <field name="rating"/>
+	                        <field name="sector_code"/>
+	                        <field name="sectore"/>
+	                        <field name="nacebel_code"/>
+	                        <field name="nacebel"/>                                                
+	                     </form>                 
+	                     <tree>
+	                        <field name="official_name"/>      
+	                        <field name="company_number"/> 
+	                        <field name="postal_code"/>                                                                                          
+	                        <field name="city"/>  
+	                        <field name="sector_code"/>
+	                        <field name="nacebel_code"/>    
+	                     </tree>    
+	                </field>                   
+	                </page>
+	                <page string="Ranking">
+	                 <field name="res_tva_ranking" widget="one2many">
+	                     <form>
+	                        <field name="name"/>
+	                        <field name="sectorrankingrddedvalue"/>
+	                        <field name="sectorrankingturnover"/>
+	                        <field name="toprankingaddedvalue"/>
+	                        <field name="toprankingturnover"/>
+	                     </form>
+	                     <tree>
+	                        <field name="name"/>
+	                        <field name="sectorrankingrddedvalue"/>
+	                        <field name="sectorrankingturnover"/>
+	                        <field name="toprankingaddedvalue"/>
+	                        <field name="toprankingturnover"/>
+	                     </tree>    
+	                </field>   
+	                </page> 
+                    <page string="Figures">
+                     <field name="res_tva_figures" widget="one2many">
+                         <form>
+                            <group>
+	                            <field name="balancetype"/>
+	                            <field name="durationmonths"/>
+	                            <field name="financial_year"/>
+                            </group> 
+                            <newline/>  
+                            <group>                                                     
+                            <field name="figures_ids" widget="one2many" nolabel="1">
+		                         <form>
+		                            <field name="name"/>
+                                    <field name="description"/>		                            
+		                            <field name="value"/>
+		                         </form>
+		                         <tree>
+                                    <field name="name"/>
+                                    <field name="description"/>                                     
+                                    <field name="value"/>
+		                         </tree>                                  
+                            </field>   
+                            </group>                        
+                         </form>
+                         <tree>
+                            <field name="financial_year"/>                               
+                            <field name="balancetype"/>
+                            <field name="durationmonths"/>
+                         </tree> 
+
+                    </field> 
+                      
+                    </page>
+                    <page string="Ratios">
+                     <field name="res_tva_ratios" widget="one2many">
+                         <form>
+                            <group>
+                                <field name="balancetype"/>
+                                <field name="durationmonths"/>
+                                <field name="financial_year"/>
+                            </group> 
+                            <newline/>  
+                            <group>                                                     
+                            <field name="figures_ids" widget="one2many" nolabel="1">
+                                 <form>
+                                    <field name="name"/>
+                                    <field name="description"/>                                     
+                                    <field name="value"/>
+                                 </form>
+                                 <tree>
+                                    <field name="name"/>
+                                    <field name="description"/>                                     
+                                    <field name="value"/>
+                                 </tree>                                  
+                            </field>   
+                            </group>                        
+                         </form>
+                         <tree>
+                            <field name="financial_year"/>                               
+                            <field name="balancetype"/>
+                            <field name="durationmonths"/>
+                         </tree> 
+
+                    </field> 
+                      
+                    </page>  
+                    
+                    <page string="Social">
+                     <field name="res_tva_social" widget="one2many">
+                         <form>
+                            <group>
+                                <field name="balancetype"/>
+                                <field name="durationmonths"/>
+                                <field name="financial_year"/>
+                            </group> 
+                            <newline/>  
+                            <group>                                                     
+                            <field name="figures_ids" widget="one2many" nolabel="1">
+                                 <form>
+                                    <field name="name"/>
+                                    <field name="description"/>                                     
+                                    <field name="value"/>
+                                 </form>
+                                 <tree>
+                                    <field name="name"/>
+                                    <field name="description"/>                                     
+                                    <field name="value"/>
+                                 </tree>                                  
+                            </field>   
+                            </group>                        
+                         </form>
+                         <tree>
+                            <field name="financial_year"/>                               
+                            <field name="balancetype"/>
+                            <field name="durationmonths"/>
+                         </tree> 
+
+                    </field> 
+                      
+                    </page>                     	                              
+                </notebook>
+                <group>
+                    <field name="states"/>                      
+                </group>
+                  
+              </sheet>
+            </form>
+         </field>
+     </record>
+     
+     <record id="open_view_trends_search" model="ir.actions.act_window">
+         <field name="name">Trends Research</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">trends.search</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+             Click to add a new trends Research
+           </p>
+         </field>         
+     </record>
+     <menuitem action="open_view_trends_search" id="menu_open_view_trends_search" sequence="2" parent="base.menu_config_address_book" string="Trends Research"/>
+-->
+     
+<!-- Trends only who research -->
+
+<!-- create a research for trends -->   
+    <record model="ir.ui.view" id="trends_search_tree_who_view">
+        <field name="name">trends.search.tree.who</field>
+        <field name="model">trends.who.search</field>
+        <field name="arch" type="xml">
+            <tree string="Trends Who Research">
+                <field name="name"/>       
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="trends_search_form_who_view">
+        <field name="name">trends.search.form.who</field>
+        <field name="model">trends.who.search</field>
+        <field name="arch" type="xml">
+            <form string="Trends Who Research" version="7.0">
+                <header>
+                    <button name="action_search_who_trends" string="Run Search" type="object" icon="gtk-execute"/>         
+                </header>
+              <sheet>
+                <field name="name"/>  
+                <group>
+                    <field name="configuration"/>                    
+                    <field name="who" required="1"/> 
+                    <field name="where"/> 
+                </group>                 
+                <notebook>
+                    <page string="General">
+                     <field name="res_who" widget="one2many">
+                         <form>
+                             <group>
+                                 <group>
+		                            <field name="name"/>
+		                            <field name="city"/>
+		                            <field name="zip"/>
+                                </group>
+	                            <group>
+		                            <field name="sectore_code"/>
+		                            <field name="sectore"/>                         
+		                            <field name="vat"/>
+	                            </group>
+                                <button name="action_search_tva_trends" string="Run Search" type="object" icon="gtk-execute"/>   	                            
+                            </group>
+                            <newline/>
+			                     <group>                 
+			                     <field name="res_tva_management" widget="one2many" nolabel="1">
+			                         <form>
+			                            <field name="gender"/>  
+			                            <field name="last_name"/>
+			                            <field name="name"/>
+			                            <field name="language_code"/>
+			                            <field name="function_code"/>
+			                            <field name="function"/>
+			                            <field name="email"/>
+			                            
+			                         </form>
+			                         <tree>
+			                            <field name="gender"/>  
+			                            <field name="last_name"/>
+			                            <field name="name"/>
+			                            <field name="language_code"/>
+			                            <field name="function_code"/>
+			                            <field name="function"/>
+			                            <field name="email"/>
+			                         </tree>    
+			                    </field> 
+			                    </group> 
+                                <newline/>			                      
+		                         <group>                   
+			                     <field name="res_tva_empty" widget="one2many" nolabel="1">
+			                         <form>
+			                            <field name="official_name"/>    
+			                            <field name="name"/>  
+			                            <field name="company_number"/> 
+			                            <field name="postal_code"/>                                                                                          
+			                            <field name="city"/>  
+			                            <field name="street"/>
+			                            <field name="house_number"/>
+			                            <field name="house_number_suffix"/>                        
+			                            <field name="email"/>
+			                            <field name="telephone"/>                          
+			                            <field name="fax"/>
+			                            <field name="website"/>  
+			                            <field name="rating"/>
+			                            <field name="sector_code"/>
+			                            <field name="sectore"/>
+			                            <field name="nacebel_code"/>
+			                            <field name="nacebel"/>                                                
+			                         </form>                 
+			                         <tree>
+			                            <field name="official_name"/>      
+			                            <field name="company_number"/> 
+			                            <field name="postal_code"/>                                                                                          
+			                            <field name="city"/>  
+			                            <field name="sector_code"/>
+			                            <field name="nacebel_code"/>    
+			                         </tree> 			                            
+			                    </field> 
+                                </group>
+                                <newline/>                                			                                      
+                                 <group>  			                        
+			                     <field name="res_tva_ranking" widget="one2many" nolabel="1">
+			                         <form>
+			                            <field name="name"/>
+			                            <field name="sectorrankingrddedvalue"/>
+			                            <field name="sectorrankingturnover"/>
+			                            <field name="toprankingaddedvalue"/>
+			                            <field name="toprankingturnover"/>
+			                         </form>
+			                         <tree>
+			                            <field name="name"/>
+			                            <field name="sectorrankingrddedvalue"/>
+			                            <field name="sectorrankingturnover"/>
+			                            <field name="toprankingaddedvalue"/>
+			                            <field name="toprankingturnover"/>
+			                         </tree>    
+			                    </field>  
+                                </group>
+                                <newline/>                                    			                     
+                                <group>    			                        
+			                     <field name="res_tva_figures" widget="one2many" nolabel="1">
+			                         <form>
+			                            <group>
+			                                <field name="balancetype"/>
+			                                <field name="durationmonths"/>
+			                                <field name="financial_year"/>
+			                            </group> 
+			                            <newline/>  
+			                            <group>                                                     
+			                            <field name="figures_ids" widget="one2many" nolabel="1">
+			                                 <form>
+			                                    <field name="name"/>
+			                                    <field name="description"/>                                 
+			                                    <field name="value"/>
+			                                 </form>
+			                                 <tree>
+			                                    <field name="name"/>
+			                                    <field name="description"/>                                     
+			                                    <field name="value"/>
+			                                 </tree>                                  
+			                            </field>   
+			                            </group>                        
+			                         </form>
+			                         <tree>
+			                            <field name="financial_year"/>                               
+			                            <field name="balancetype"/>
+			                            <field name="durationmonths"/>
+			                         </tree> 
+			
+			                    </field> 
+                                </group>
+                                <newline/>    			                      
+			                     <group>
+			                     <field name="res_tva_ratios" widget="one2many" nolabel="1">
+			                         <form>
+			                            <group>
+			                                <field name="balancetype"/>
+			                                <field name="durationmonths"/>
+			                                <field name="financial_year"/>
+			                            </group> 
+			                            <newline/>  
+			                            <group>                                                     
+			                            <field name="figures_ids" widget="one2many" nolabel="1">
+			                                 <form>
+			                                    <field name="name"/>
+			                                    <field name="description"/>                                     
+			                                    <field name="value"/>
+			                                 </form>
+			                                 <tree>
+			                                    <field name="name"/>
+			                                    <field name="description"/>                                     
+			                                    <field name="value"/>
+			                                 </tree>                                  
+			                            </field>   
+			                            </group>                        
+			                         </form>
+			                         <tree>
+			                            <field name="financial_year"/>                               
+			                            <field name="balancetype"/>
+			                            <field name="durationmonths"/>
+			                         </tree> 
+			
+			                    </field> 
+			                    </group>
+                                <newline/>	
+                                <!--  We can't show this part: Trends obligation -->		                      
+			                    <!--  <group>
+			                     <field name="res_tva_social" widget="one2many" nolabel="1">
+			                         <form>
+			                            <group>
+			                                <field name="balancetype"/>
+			                                <field name="durationmonths"/>
+			                                <field name="financial_year"/>
+			                            </group> 
+			                            <newline/>  
+			                            <group>                                                     
+			                            <field name="figures_ids" widget="one2many" nolabel="1">
+			                                 <form>
+			                                    <field name="name"/>
+			                                    <field name="description"/>                                     
+			                                    <field name="value"/>
+			                                 </form>
+			                                 <tree>
+			                                    <field name="name"/>
+			                                    <field name="description"/>                                     
+			                                    <field name="value"/>
+			                                 </tree>                                  
+			                            </field>   
+			                            </group>                        
+			                         </form>
+			                         <tree>
+			                            <field name="financial_year"/>                               
+			                            <field name="balancetype"/>
+			                            <field name="durationmonths"/>
+			                         </tree> 
+			
+			                    </field> 
+			                    </group>-->
+			            <newline/>
+			            <group>
+			                <field name="state" readonly="1"/>
+			            </group>
+                        </form>
+                         <tree>
+                            <field name="name"/>
+                            <field name="city"/>
+                            <field name="zip"/>
+                            <field name="sectore_code"/>
+                            <field name="vat"/>
+                            <button name="action_create_lead" string="Create Lead" type="object" icon="gtk-execute"/>                            
+                         </tree>    
+                    </field>  
+                    </page>                                                    
+                </notebook>
+                <group>
+                    <field name="states"/>                      
+                </group>
+                  
+              </sheet>
+            </form>
+         </field>
+     </record>
+     
+     <record id="open_view_trends_who_search" model="ir.actions.act_window">
+         <field name="name">Trends Who Research</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">trends.who.search</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+             Click to add a new trends Research
+           </p>
+         </field>         
+     </record>
+     <menuitem action="open_view_trends_who_search" id="menu_open_view_trends_who_search" sequence="2" parent="menu_trends_using" string="Trends Who Research"/>       
+     
+    </data>
+ </openerp>
+       

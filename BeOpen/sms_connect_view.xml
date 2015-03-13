@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>   
+<openerp>
+    <data>
+	   <menuitem id="menu_parent" name="BeOpen" icon="terp-partner"/>
+	   <menuitem id="menu_message_parent" name="BeOpen Management" parent="menu_parent"/>
+	   <menuitem id="menu_config" name="BeOpen Configuration" parent="menu_parent"></menuitem>
+	   
+	   <record id="connect_reception_form" model="ir.ui.view">
+           <field name="name">connect.reception.form</field>
+           <field name="model">connect.reception</field>
+           <field name="arch" type="xml">
+                <form string="Linked To" version="7.0">
+                    <sheet readonly="True">
+                                <group >
+                                     <field name="name" readonly="True" attrs="{'required': [('link', '!=', False)]}"/>
+                                     <field name="link" readonly="True" attrs="{'required': [('name', '!=', False)]}"/>
+                                </group>
+                                
+                                <group >
+                                   <group attrs="{'invisible': [('link', '=', False)]}">
+                                       <field name="subject" readonly="True" attrs="{'required': [('link', '!=', False)]}"/>
+                                       <field name="mobile" readonly="True"/>
+                                       <field name="date" readonly="True"/>
+                                   </group>
+                                   <group attrs="{'invisible': [('link', '=', False)]}">
+                                       <field name="message" readonly="True" attrs="{'required': [('link', '!=', False)]}"/>
+                                       <field name="sms_id" readonly="True"/>
+                                   </group>
+                               </group>
+                    </sheet> 
+                </form>
+           </field>
+       </record>
+	   
+	   <record id="connect_reception_tree" model="ir.ui.view">
+           <field name="name">connect.reception.tree</field>
+           <field name="model">connect.reception</field>
+           <field name="arch" type="xml">
+	           <tree string="Linked To">
+	               <field name="name"/>
+	               <field name="link"/>
+	               <field name="subject" />
+	               <field name="mobile" />
+	               <field name="date" />
+	               <field name="message" />
+	               <field name="sms_id" />
+	           </tree>
+	       </field>
+        </record>
+        
+	   
+	   <record id="connect_connect_form" model="ir.ui.view">
+	       <field name="name">connect.connect.form</field>
+	       <field name="model">connect.connect</field>
+	       <field name="type">form</field>
+	       <field name="arch" type="xml">
+	            <form string="Connect result" version="7.0">
+	                <sheet>
+		               <group>
+		                   <field name="type" />
+		                   <field name="name" />
+			               <field name="api" />
+			               <field name="username" />
+			               <field name="password" password="True"/>
+			               <field name="url" />
+			               <field name="registration_id" />
+			               <field name="keyword" attrs="{'invisible': [('type', '!=', 'reception')], 'required': [('type', '=', 'reception')]}"/>
+			               <field name="type_2" attrs="{'invisible': [('type', '!=', 'reception')], 'required': [('type', '=', 'reception')]}"/>
+			           </group>
+			           <newline/>
+			           <field name="connect_ids" attrs="{'invisible': [('type', '!=', 'reception')]}">
+  		               <tree string="Linked To">
+  		                       <field name="sequence"/>
+			                   <field name="name"/>
+	                           <field name="link"/>
+	                           <field name="subject" />
+	                           <field name="mobile" />
+	                           <field name="date" />
+	                           <field name="message" />
+	                           <field name="sms_id" />
+			               </tree>
+			                <form string="Linked To" version="7.0">
+			                    <group>
+			                         <field name="sequence"/>
+			                         <newline/>
+			                         <field name="name" attrs="{'required': [('link', '!=', False)]}" on_change="onchange_name(name)"/>
+			                         <field name="link" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_link(link)"/>
+			                    </group>
+			                    
+			                    <group >
+			                       <group attrs="{'invisible': [('link', '=', False)]}">
+			                           <field name="subject" attrs="{'required': [('link', '!=', False)]}"/>
+			                           <field name="mobile" attrs="{'required': [('link', '!=', False)]}"/>
+			                           <field name="date" attrs="{'required': [('link', '!=', False)]}"/>
+			                       </group>
+			                       <group attrs="{'invisible': [('link', '=', False)]}">
+			                           <field name="message" attrs="{'required': [('link', '!=', False)]}"/>
+			                           <field name="sms_id" />
+			                       </group>
+			                   </group>
+			               </form>    
+			           </field>
+			        </sheet> 
+		        </form>
+	       </field>
+	   </record>
+	   <record id="connect_connect_tree" model="ir.ui.view">
+           <field name="name">connect.result.tree</field>
+           <field name="model">connect.connect</field>
+           <field name="type">tree</field>
+           <field name="arch" type="xml">
+                <tree string="Connect result">
+                   <field name="name" />
+                   <field name="api" />
+                   <field name="username" />
+                </tree>
+           </field>
+       </record>
+       
+       <record id="action_connect_send" model="ir.actions.act_window">
+            <field name="name">Send</field>
+            <field name="res_model">connect.connect</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','sending')]</field>
+        </record>
+        <record id="action_connect_reception" model="ir.actions.act_window">
+            <field name="name">Reception</field>
+            <field name="res_model">connect.connect</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','reception')]</field>
+        </record>
+        <!-- <record id="action_connect_payment" model="ir.actions.act_window">
+            <field name="name">Payment</field>
+            <field name="res_model">connect.connect</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','payment')]</field>
+        </record> -->
+        <menuitem action="action_connect_send" id="menu_connect_send" parent="menu_config"/>
+        <menuitem action="action_connect_reception" id="menu_connect_reception" parent="menu_config"/>
+       <!-- <menuitem action="action_connect_payment" id="menu_connect_payment" parent="menu_config"/> --> 
+	</data>
+</openerp>

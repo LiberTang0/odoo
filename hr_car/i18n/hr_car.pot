@@ -1,0 +1,261 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_car
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.2\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-09-05 10:10+0000\n"
+"PO-Revision-Date: 2011-09-05 10:10+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_car
+#: field:hr.car,fournisseur_id:0
+msgid "Fournisseur"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,immatriculation:0
+msgid "Immatriculation"
+msgstr ""
+
+#. module: hr_car
+#: selection:hr.car,carburant:0
+msgid "Diesel"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car.sheet,date_entretien:0
+msgid "date d'entretien"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.model,name:hr_car.model_hr_car_modele
+msgid "Model cars"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.model,name:hr_car.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.model,name:hr_car.model_hr_car
+msgid "Employee Car Description"
+msgstr ""
+
+#. module: hr_car
+#: view:hr.car:0
+msgid "Assurance"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,compagnie:0
+msgid "Compagnie"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,co2:0
+msgid "co2"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.actions.act_window,name:hr_car.open_view_car_list_my
+#: model:ir.ui.menu,name:hr_car.menu_open_view_car_list_my
+msgid "Cars"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,entretien_id:0
+#: field:hr.car.sheet,line_id:0
+msgid "unknown"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,num_contrat:0
+msgid "Numero de contrat"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,moteur:0
+msgid "Moteur"
+msgstr ""
+
+#. module: hr_car
+#: view:hr.car:0
+msgid "Véhicules"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,name:0
+msgid "carname"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,term_insurance:0
+msgid "echeance"
+msgstr ""
+
+#. module: hr_car
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,modele:0
+#: field:hr.car.modele,name:0
+msgid "Modele"
+msgstr ""
+
+#. module: hr_car
+#: view:hr.car:0
+msgid "Voiture"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car.sheet,remarque:0
+msgid "Remarque"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.module.module,description:hr_car.module_meta_information
+msgid "\n"
+"    Car company management module\n"
+"    "
+msgstr ""
+
+#. module: hr_car
+#: model:ir.model,name:hr_car.model_hr_car_marque
+msgid "Brand cars"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.actions.act_window,name:hr_car.open_view_car_modele_list
+#: model:ir.ui.menu,name:hr_car.menu_view_car_modele_form
+msgid "Models cars"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.ui.menu,name:hr_car.menu_hr_car_management
+msgid "Vehicles"
+msgstr ""
+
+#. module: hr_car
+#: constraint:hr.employee:0
+msgid "Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_car
+#: field:hr.employee,vehicle_id:0
+msgid "Vehicules"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car.sheet,garage_id:0
+msgid "Garage"
+msgstr ""
+
+#. module: hr_car
+#: view:hr.car:0
+msgid "Voitures"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,carburant:0
+msgid "Carburant"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.module.module,shortdesc:hr_car.module_meta_information
+msgid "Car Company Resources"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.actions.act_window,name:hr_car.open_view_car_marque_list
+#: model:ir.ui.menu,name:hr_car.menu_view_car_marque_form
+msgid "Brands Cars"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.model,name:hr_car.model_hr_car_sheet
+msgid "employee Car history"
+msgstr ""
+
+#. module: hr_car
+#: view:hr.car.modele:0
+msgid "Modeles"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,employee_id:0
+msgid "Employe"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,leasing_id:0
+msgid "Leasing"
+msgstr ""
+
+#. module: hr_car
+#: model:ir.ui.menu,name:hr_car.menu_view_car_form
+msgid "Cars Companies"
+msgstr ""
+
+#. module: hr_car
+#: view:hr.car.marque:0
+msgid "Marques"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,couleur:0
+msgid "Couleur"
+msgstr ""
+
+#. module: hr_car
+#: selection:hr.car,carburant:0
+msgid "Essence"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,courtier_id:0
+msgid "Courtier"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car.sheet,km:0
+msgid "KM"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,marque:0
+#: field:hr.car.marque,name:0
+#: field:hr.car.modele,marque_id:0
+msgid "Marque"
+msgstr ""
+
+#. module: hr_car
+#: view:hr.car:0
+msgid "Entretiens et maintenance"
+msgstr ""
+
+#. module: hr_car
+#: selection:hr.car,carburant:0
+msgid "Electrique"
+msgstr ""
+
+#. module: hr_car
+#: field:hr.car,num_chassis:0
+msgid "Numero de chassis"
+msgstr ""
+
+#. module: hr_car
+#: view:hr.car:0
+msgid "Entretiens"
+msgstr ""
+

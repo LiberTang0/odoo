@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>   
+<openerp>
+    <data noupdate="1">
+        <record id="ir_cron_sms_gateway_action" model="ir.cron">
+            <field name="name">BeOpen service</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>  
+            <field name="doall" eval="False"/>
+            <field name="model">receipt.receipt</field>
+            <field name="function">cron_receiveSMS</field>
+            <field name="args">()</field>
+        </record>
+    </data>
+    <data>
+        <record id="receipt_tree" model="ir.ui.view">
+           <field name="name">receipt.result.tree</field>
+           <field name="model">receipt.receipt</field>
+           <field name="arch" type="xml">
+                <tree string="receipt result">
+	                   <field name="sendadres" />
+	                   <field name="mess" />
+	                   <field name="datime" />
+	                   <field name="mess_id" />
+	                   <field name="config" />
+               </tree>
+           </field>
+        </record>
+        <record id="receipt_form" model="ir.ui.view">
+           <field name="name">receipt.result.form</field>
+           <field name="model">receipt.receipt</field>
+           <field name="arch" type="xml">
+                <form string="receipt result" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="sendadres" />
+                                <field name="mess" />
+                                <field name="config" />
+                                
+                            </group>
+                            <group>
+                                <field name="datime" />
+                                <field name="mess_id" />
+                                <field name="link" attrs="{'invisible': [('link', '=', False)]}"/>
+                            </group>
+		                </group>
+		            </sheet>
+                </form>
+           </field>
+        </record>
+
+       <!-- action sur la reception  -->
+        <record id="action_receipt_message" model="ir.actions.act_window">
+            <field name="name">Reception History</field>
+            <field name="res_model">receipt.receipt</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_receipt_message" id="menu_receipt_message" parent="menu_message_parent"/>
+        
+    </data>
+</openerp>

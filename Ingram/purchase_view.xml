@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>       
+    <data>        
         <record id="purchase_order_form_in" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
-                    <field name="generate_po"/>
+                    <field name="generate_po" colspan="4"/>
                 </field>
-                <field name="partner_ref" position="after">
-                    <field name="skipxml" />
-                </field>
-                <field name="order_line" position="replace">
-                    <field name="order_line" nolabel="1" mode="tree">
+                <field colspan="4" name="order_line" nolabel="1" mode="tree,form" position="replace">
+                    <field colspan="4" name="order_line" nolabel="1" mode="tree">
                         <tree string="Purchase Order Lines" colors="red:verif=='3';green:verif=='2';blue:verif=='1'">
                             <field name="date_planned"/>
                             <field name="name"/>
@@ -26,10 +23,11 @@
                         </tree>
                     </field>
                 </field>
-                <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" position="before">
-                    <button name="button_check_AV" states="draft,sent" string="Price Availabilty" type="object"  help="Color lines: Red: price increase; green: price decrease; Blue: stock decrease"/>
+                <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel Order" position="before">
+                    <button name="button_check_AV" states="draft" string="Price Availabilty" type="object"  help="Color lines: Red: price increase; green: price decrease; Blue: stock decrease"/>
                 </button>              
             </field>
         </record>
+       
     </data>
 </openerp>

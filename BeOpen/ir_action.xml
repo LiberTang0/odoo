@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>   
+<openerp>
+    <data>
+
+        <record id="view_server_action_form_in" model="ir.ui.view">
+            <field name="name">Server Action</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                	<page string="SMS Configuration" attrs="{'invisible':[('state','!=','sms')]}" position="replace">
+                    	<page string="SMS Configuration" attrs="{'invisible':[('state','not in',('sms','beopen'))]}">
+                            <group>
+                                <field name="mobile" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','in',('sms','beopen'))]}"/>
+                                <field name="sms" attrs="{'required':[('state','in',('sms','beopen'))]}"/>
+                            </group>
+                            <label string="Access all the fields related to the current object using expressions, i.e. object.partner_id.name " align="0.0"/>
+                        </page>
+                    </page>
+                    <field name="srcmodel_id" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_copy'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}" position="replace">
+                        <field name="srcmodel_id" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'),('state','!=','beopen'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_copy'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','beopen'),('state','!=','other')]}"/>
+                    </field>
+                    <field name="copy_object" on_change="change_object(copy_object, state)" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_write'), ('state','!=','object_create'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}" position="replace">
+						<field name="copy_object" on_change="change_object(copy_object, state)" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'),('state','!=','beopen'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_write'), ('state','!=','object_create'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'),('state','!=','beopen'), ('state','!=','other')]}"/>
+                    </field>                               
+            </field>
+        </record>
+    </data>
+</openerp>

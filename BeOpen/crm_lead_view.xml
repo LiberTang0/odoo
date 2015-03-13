@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>   
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="crm_case_form_view_leads">
+            <field name="name">CRM - Leads Form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            <field name="arch" type="xml">
+                <field name="partner_name" string="Company Name" position="before">
+                    <field name="vote"/>
+                </field>                            
+            </field>
+        </record>
+        <record model="ir.ui.view" id="crm_case_tree_view_leads">
+            <field name="name">Leads</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
+            <field name="arch" type="xml">
+                    <field name="name" position="after">
+                        <field name="vote" invisible="True"/>
+                    </field>
+            </field>
+        </record>
+        <record id="action_view_vote_board" model="ir.actions.act_window">
+            <field name="name">Vote</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','lead')]</field>
+            <field name="context">{'group_by':['vote']}</field>
+            <field name="view_id" ref="crm.crm_case_tree_view_leads"/>
+        </record>
+        
+        <record model="ir.ui.view" id="board_crm_statistical_form">
+            <field name="name">CRM - Statistical Dashboard Form</field>
+            <field name="model">board.board</field>
+            <field name="inherit_id" ref="crm.board_crm_statistical_form"/>
+            <field name="arch" type="xml">
+                <action string="Planned Revenue by Stage and User" name="%(crm.act_oppor_stage_user)d" position="after">
+                    <action string="Vote" name="%(action_view_vote_board)d"/>
+                </action>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,8 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_hr_car","hr.car","model_hr_car","base.group_hr_manager",1,1,1,1
+"access_hr_car_model","hr.car.modele","model_hr_car_modele","base.group_system",1,1,1,1
+"access_hr_car_marque","hr.car.marque","model_hr_car_marque","base.group_system",1,1,1,1
+"access_hr_car_model_rh","hr.car.modele","model_hr_car_modele","base.group_hr_manager",1,1,1,1
+"access_hr_car_marque_rh","hr.car.marque","model_hr_car_marque","base.group_hr_manager",1,1,1,1
+"access_hr_car_sheet","hr.car.sheet","model_hr_car_sheet","base.group_hr_manager",1,1,1,1
+
